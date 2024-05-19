@@ -57,13 +57,45 @@ export const Board = () => {
     };
   }, []);
 
+  const saveImage = async () => {
+    const canvas = canvasRef.current;
+    if (!canvas) console.error("Canvas not found");
+
+    const blob = canvas?.toBlob(async (blob) => {
+      console.log("blob:", blob);
+      const formData = new FormData();
+      formData.append("file", blob as Blob, "blob.png");
+      console.log("formData:", formData);
+
+      formData.forEach((value, key) => {
+        console.log(key, value);
+      });
+      try {
+        const response = await fetch("http://localhost:8080/saveBoard", {
+          method: "POST",
+          body: formData,
+        });
+        if (response.ok) {
+          console.log("Image saved!");
+        } else {
+          console.error("Failed to save image");
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }, "image/png");
+  }
+
   return (
-    <canvas
-      ref={canvasRef}
-      width={2000}
-      height={1000}
-      style={{ backgroundColor: "lightblue" }}
-    />
+    <div>
+      <canvas
+        ref={canvasRef}
+        width={2000}
+        height={1000}
+        style={{ backgroundColor: "lightblue" }}
+      />
+      <button onClick={saveImage}>Save</button>
+    </div>
   );
 };
 
