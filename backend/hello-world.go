@@ -2,8 +2,43 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"net/http"
+	"os"
 )
+
+func saveBoardHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+	switch r.Method {
+	case "POST":
+		err := r.ParseForm()
+		if err != nil {
+			http.Error(w, "Error parsing form.", 400)
+		}
+
+		file, handler, err := r.FormFile("drawing")
+		if err != nil {
+			http.Error(w, "Error retrieving file.", 400)
+		}
+
+		defer file.Close()
+
+		f, err := os.OpenFile("./drawings/"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0o666)
+		if err != nil {
+			http.Error(w, "Error opening file.", 400)
+		}
+
+		defer f.Close()
+
+		_, err = io.Copy(f, file)
+		if err != nil {
+			http.Error(w, "Error copying file.", 400)
+		}
+
+	default:
+		http.Error(w, "Invalid request method.", 405)
+	}
+}
 
 func helloWorldHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
@@ -18,5 +53,6 @@ func helloWorldHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	http.HandleFunc("/helloworld", helloWorldHandler)
+	http.HandleFunc("/saveBoard", saveBoardHandler)
 	http.ListenAndServe(":8080", nil)
 }
