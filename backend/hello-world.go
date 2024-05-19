@@ -10,7 +10,7 @@ func helloWorldHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
 		fmt.Fprintf(w, "Hello World")
-		fmt.Fprintf(w, "Alvin is a bitch")
+		fmt.Fprintf(w, " Gabe is a bitch")
 	default:
 		http.Error(w, "Invalid request method.", 405)
 	}

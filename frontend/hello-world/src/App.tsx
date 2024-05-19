@@ -1,6 +1,7 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
+
 
 function App() {
 	const [hello, setHello] = useState("")
@@ -12,8 +13,6 @@ function App() {
 				console.error(err)
 			})
 	}, [])
-
-	console.log(hello)
 	return (<p>{hello}</p>)
 }
 
