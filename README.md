@@ -20,3 +20,16 @@ can i ask u to fullscreen this terminal. cus it makes it tiny on my screen lmfao
 
 wait .. you see in split screen too?
 check fb, this is what i see
+
+Kinda how im imagining this going:
+
+Frontend (React, TypeScript, Socket.IO):
+
+- UI
+- Real-time collaboration
+
+Backend (Go):
+
+- Auth (login, registration, JWTs)
+- Rooms (and any logic related)
+- DBs (user data, drawings, rooms)
