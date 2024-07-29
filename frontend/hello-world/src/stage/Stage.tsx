@@ -20,7 +20,7 @@ import {
   PiDownload,
 } from "react-icons/pi";
 import Konva from "konva";
-import { Button } from "./styled";
+import { Button, ColorDiv, ColorInput } from "./styled";
 import { TOOLS, RectType, CircleType, LineType, TextType } from "./constants";
 
 export default function StageComponent() {
@@ -29,6 +29,7 @@ export default function StageComponent() {
 
   const [tool, setTool] = useState(TOOLS.HAND);
   const [bgCol, setBgCol] = useState("#FFFFFF");
+  const [color, setColor] = useState("#6A5ACD");
 
   const isDrawing = useRef(false);
   const isTyping = useRef(false);
@@ -53,16 +54,19 @@ export default function StageComponent() {
 
     switch (tool) {
       case TOOLS.RECT:
-        setRects([...rects, { x: pos.x, y: pos.y, height: 0, width: 0 }]);
+        setRects([
+          ...rects,
+          { x: pos.x, y: pos.y, height: 0, width: 0, color },
+        ]);
         break;
       case TOOLS.CIRCLE:
-        setCircles([...circles, { x: pos.x, y: pos.y, radius: 0 }]);
+        setCircles([...circles, { x: pos.x, y: pos.y, radius: 0, color }]);
         break;
       case TOOLS.SCRIBBLE:
-        setLines([...lines, { points: [pos.x, pos.y] }]);
+        setLines([...lines, { points: [pos.x, pos.y], color }]);
         break;
       case TOOLS.ARROW:
-        setArrows([...arrows, { points: [pos.x, pos.y] }]);
+        setArrows([...arrows, { points: [pos.x, pos.y], color }]);
         break;
       default:
         break;
@@ -129,6 +133,7 @@ export default function StageComponent() {
   }
 
   function handleSelectTool(tool: string) {
+    isTyping.current = false;
     trRef.current?.nodes([]);
     setTool(tool);
   }
@@ -144,7 +149,7 @@ export default function StageComponent() {
 
     if (!pos) return;
 
-    setTexts([...texts, { x: pos.x, y: pos.y, text: "" }]);
+    setTexts([...texts, { x: pos.x, y: pos.y, text: "", color }]);
   }
 
   function handleSave() {
@@ -187,6 +192,13 @@ export default function StageComponent() {
         <Button onClick={() => {}}>
           <PiDownload size="2em" />
         </Button>
+        <ColorDiv>
+          <ColorInput
+            type="color"
+            value={color}
+            onChange={(e) => setColor(e.target.value)}
+          />
+        </ColorDiv>
       </div>
       <Stage
         ref={stageRef}
@@ -223,7 +235,7 @@ export default function StageComponent() {
               height={Math.abs(rect.height)}
               width={Math.abs(rect.width)}
               cornerRadius={10}
-              stroke="#df4b26"
+              stroke={rect.color}
               strokeWidth={3}
               onClick={handleClick}
               draggable={isDraggable}
@@ -235,7 +247,7 @@ export default function StageComponent() {
               x={circle.x}
               y={circle.y}
               radius={circle.radius}
-              stroke="#df4b26"
+              stroke={circle.color}
               strokeWidth={3}
               onClick={handleClick}
               draggable={isDraggable}
@@ -245,7 +257,7 @@ export default function StageComponent() {
           {lines.map((line) => (
             <Line
               points={line.points}
-              stroke="#df4b26"
+              stroke={line.color}
               strokeWidth={3}
               lineCap={"round"}
               onClick={handleClick}
@@ -256,7 +268,7 @@ export default function StageComponent() {
           {arrows.map((arrow) => (
             <Arrow
               points={arrow.points}
-              stroke="#df4b26"
+              stroke={arrow.color}
               strokeWidth={3}
               pointerWidth={5}
               lineCap={"round"}
