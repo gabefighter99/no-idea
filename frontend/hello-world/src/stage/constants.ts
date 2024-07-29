@@ -9,13 +9,25 @@ export const TOOLS = {
   TEXT: "TEXT",
 };
 
-export type Rectangle = {
+export type RectType = {
   x: number;
   y: number;
   height: number;
   width: number;
 };
 
-export type Scribble = {
+export type CircleType = {
+  x: number;
+  y: number;
+  radius: number;
+};
+
+export type LineType = {
   points: number[];
+};
+
+export type TextType = {
+  x: number;
+  y: number;
+  text: string;
 };

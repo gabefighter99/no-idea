@@ -1,4 +1,12 @@
-import { Stage, Layer, Rect, Line } from "react-konva";
+import {
+  Stage,
+  Layer,
+  Rect,
+  Line,
+  Arrow,
+  Circle,
+  Transformer,
+} from "react-konva";
 import { useRef, useState } from "react";
 import {
   PiPaintBrush,
@@ -13,16 +21,24 @@ import {
 } from "react-icons/pi";
 import Konva from "konva";
 import { Button } from "./styled";
-import { Rectangle, Scribble, TOOLS } from "./constants";
+import { TOOLS, RectType, CircleType, LineType, TextType } from "./constants";
 
 export default function StageComponent() {
   const stageRef = useRef<Konva.Stage>(null);
+  const trRef = useRef<Konva.Transformer>(null);
+
   const [tool, setTool] = useState(TOOLS.HAND);
   const [bgCol, setBgCol] = useState("#FFFFFF");
-  const isDrawing = useRef(false);
 
-  const [rects, setRects] = useState<Rectangle[]>([]);
-  const [scribbles, setScribbles] = useState<Scribble[]>([]);
+  const isDrawing = useRef(false);
+  const isTyping = useRef(false);
+
+  const [rects, setRects] = useState<RectType[]>([]);
+  const [circles, setCircles] = useState<CircleType[]>([]);
+  const [lines, setLines] = useState<LineType[]>([]);
+  const [arrows, setArrows] = useState<LineType[]>([]);
+  const [texts, setTexts] = useState<TextType[]>([]);
+  const isDraggable = tool === TOOLS.HAND;
 
   function handlePtrDown() {
     if (tool === TOOLS.HAND) return;
@@ -37,10 +53,16 @@ export default function StageComponent() {
 
     switch (tool) {
       case TOOLS.RECT:
-        setRects([...rects, { x: pos.x, y: pos.y, height: 20, width: 20 }]);
+        setRects([...rects, { x: pos.x, y: pos.y, height: 0, width: 0 }]);
+        break;
+      case TOOLS.CIRCLE:
+        setCircles([...circles, { x: pos.x, y: pos.y, radius: 0 }]);
         break;
       case TOOLS.SCRIBBLE:
-        setScribbles([...scribbles, { points: [pos.x, pos.y] }]);
+        setLines([...lines, { points: [pos.x, pos.y] }]);
+        break;
+      case TOOLS.ARROW:
+        setArrows([...arrows, { points: [pos.x, pos.y] }]);
         break;
       default:
         break;
@@ -64,23 +86,65 @@ export default function StageComponent() {
 
     switch (tool) {
       case TOOLS.RECT:
-        let lastRect = rects[rects.length - 1];
-        lastRect.height = pos.y - lastRect.y;
-        lastRect.width = pos.x - lastRect.x;
+        let rect = rects[rects.length - 1];
+        rect.height = pos.y - rect.y;
+        rect.width = pos.x - rect.x;
 
-        rects.splice(rects.length - 1, 1, lastRect);
+        rects.splice(rects.length - 1, 1, rect);
         setRects(rects.concat());
         break;
-      case TOOLS.SCRIBBLE:
-        let lastScribble = scribbles[scribbles.length - 1];
-        lastScribble.points = lastScribble.points.concat([pos.x, pos.y]);
+      case TOOLS.CIRCLE:
+        let circle = circles[circles.length - 1];
+        circle.radius = Math.sqrt(
+          (pos.x - circle.x) ** 2 + (pos.y - circle.y) ** 2,
+        );
 
-        scribbles.splice(scribbles.length - 1, 1, lastScribble);
-        setScribbles(scribbles.concat());
+        circles.splice(circles.length - 1, 1, circle);
+        setCircles(circles.concat());
+        break;
+      case TOOLS.SCRIBBLE:
+        let scribble = lines[lines.length - 1];
+        scribble.points = scribble.points.concat([pos.x, pos.y]);
+
+        lines.splice(lines.length - 1, 1, scribble);
+        setLines(lines.concat());
+        break;
+      case TOOLS.ARROW:
+        let arrow = arrows[arrows.length - 1];
+        arrow.points = [arrow.points[0], arrow.points[1], pos.x, pos.y];
+
+        arrows.splice(arrows.length - 1, 1, arrow);
+        setArrows(arrows.concat());
         break;
       default:
         break;
     }
+  }
+
+  function handleClick(e: Konva.KonvaEventObject<MouseEvent>) {
+    if (tool !== TOOLS.HAND) return;
+
+    const target = e.currentTarget;
+    trRef.current?.nodes([target]);
+  }
+
+  function handleSelectTool(tool: string) {
+    trRef.current?.nodes([]);
+    setTool(tool);
+  }
+
+  function handleDblTapClick() {
+    if (tool !== TOOLS.TEXT) return;
+    if (!stageRef.current) return;
+
+    isTyping.current = true;
+
+    const stage = stageRef.current;
+    const pos = stage.getPointerPosition();
+
+    if (!pos) return;
+
+    setTexts([...texts, { x: pos.x, y: pos.y, text: "" }]);
   }
 
   function handleSave() {
@@ -96,28 +160,28 @@ export default function StageComponent() {
           padding: "10px",
         }}
       >
-        <Button onClick={() => setTool(TOOLS.HAND)}>
+        <Button onClick={() => handleSelectTool(TOOLS.HAND)}>
           <PiHandLight size="2em" />
         </Button>
-        <Button onClick={() => setTool(TOOLS.SCRIBBLE)}>
+        <Button onClick={() => handleSelectTool(TOOLS.SCRIBBLE)}>
           <PiPaintBrush size="2em" />
         </Button>
-        <Button onClick={() => setTool(TOOLS.RECT)}>
+        <Button onClick={() => handleSelectTool(TOOLS.RECT)}>
           <PiRectangle size="2em" />
         </Button>
-        <Button onClick={() => setTool(TOOLS.CIRCLE)}>
+        <Button onClick={() => handleSelectTool(TOOLS.CIRCLE)}>
           <PiCircle size="2em" />
         </Button>
-        <Button onClick={() => setTool(TOOLS.DIAMOND)}>
+        <Button onClick={() => handleSelectTool(TOOLS.DIAMOND)}>
           <PiDiamond size="2em" />
         </Button>
-        <Button onClick={() => setTool(TOOLS.CYLINDER)}>
+        <Button onClick={() => handleSelectTool(TOOLS.CYLINDER)}>
           <PiCylinder size="2em" />
         </Button>
-        <Button onClick={() => setTool(TOOLS.ARROW)}>
+        <Button onClick={() => handleSelectTool(TOOLS.ARROW)}>
           <PiArrowRight size="2em" />
         </Button>
-        <Button onClick={() => setTool(TOOLS.TEXT)}>
+        <Button onClick={() => handleSelectTool(TOOLS.TEXT)}>
           <PiTextAa size="2em" />
         </Button>
         <Button onClick={() => {}}>
@@ -129,6 +193,8 @@ export default function StageComponent() {
         width={window.innerWidth}
         height={window.innerHeight}
         onPointerDown={handlePtrDown}
+        onDblClick={handleDblTapClick}
+        onDblTap={handleDblTapClick}
         onPointerUp={handlePtrUp}
         onPointerMove={handlePtrMove}
       >
@@ -139,21 +205,64 @@ export default function StageComponent() {
             width={window.innerWidth}
             height={window.innerHeight}
             fill={bgCol}
+            onClick={() => {
+              trRef.current?.nodes([]);
+            }}
           ></Rect>
+
+          <Transformer ref={trRef} />
 
           {rects.map((rect) => (
             <Rect
-              x={rect.x}
-              y={rect.y}
-              height={rect.height}
-              width={rect.width}
+              // I know you are wondering what all this maths is about
+              // But don't worry about it.
+              // Trust.
+              // I'm a genius.
+              x={Math.min(rect.x, rect.x + rect.width)}
+              y={Math.min(rect.y, rect.y + rect.height)}
+              height={Math.abs(rect.height)}
+              width={Math.abs(rect.width)}
+              cornerRadius={10}
               stroke="#df4b26"
-              strokeWidth={2}
+              strokeWidth={3}
+              onClick={handleClick}
+              draggable={isDraggable}
             />
           ))}
 
-          {scribbles.map((scribble) => (
-            <Line points={scribble.points} stroke="#df4b26" strokeWidth={2} />
+          {circles.map((circle) => (
+            <Circle
+              x={circle.x}
+              y={circle.y}
+              radius={circle.radius}
+              stroke="#df4b26"
+              strokeWidth={3}
+              onClick={handleClick}
+              draggable={isDraggable}
+            />
+          ))}
+
+          {lines.map((line) => (
+            <Line
+              points={line.points}
+              stroke="#df4b26"
+              strokeWidth={3}
+              lineCap={"round"}
+              onClick={handleClick}
+              draggable={isDraggable}
+            />
+          ))}
+
+          {arrows.map((arrow) => (
+            <Arrow
+              points={arrow.points}
+              stroke="#df4b26"
+              strokeWidth={3}
+              pointerWidth={5}
+              lineCap={"round"}
+              onClick={handleClick}
+              draggable={isDraggable}
+            />
           ))}
         </Layer>
       </Stage>
