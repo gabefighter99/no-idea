@@ -10,6 +10,7 @@ export const TOOLS = {
 };
 
 export type RectType = {
+  id: string;
   x: number;
   y: number;
   height: number;
@@ -18,6 +19,7 @@ export type RectType = {
 };
 
 export type CircleType = {
+  id: string;
   x: number;
   y: number;
   radius: number;
@@ -25,11 +27,13 @@ export type CircleType = {
 };
 
 export type LineType = {
+  id: string;
   points: number[];
   color: string;
 };
 
 export type TextType = {
+  id: string;
   x: number;
   y: number;
   text: string;

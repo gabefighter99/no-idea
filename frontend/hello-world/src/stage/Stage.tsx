@@ -7,7 +7,7 @@ import {
   Circle,
   Transformer,
 } from "react-konva";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   PiPaintBrush,
   PiRectangle,
@@ -30,16 +30,17 @@ export default function StageComponent() {
   const [tool, setTool] = useState(TOOLS.HAND);
   const [bgCol, setBgCol] = useState("#FFFFFF");
   const [color, setColor] = useState("#6A5ACD");
+  const [selected, setSelected] = useState<Konva.Node | null>(null);
 
   const isDrawing = useRef(false);
   const isTyping = useRef(false);
+  const isDraggable = tool === TOOLS.HAND;
 
   const [rects, setRects] = useState<RectType[]>([]);
   const [circles, setCircles] = useState<CircleType[]>([]);
   const [lines, setLines] = useState<LineType[]>([]);
   const [arrows, setArrows] = useState<LineType[]>([]);
   const [texts, setTexts] = useState<TextType[]>([]);
-  const isDraggable = tool === TOOLS.HAND;
 
   function handlePtrDown() {
     if (tool === TOOLS.HAND) return;
@@ -52,21 +53,23 @@ export default function StageComponent() {
 
     if (!pos) return;
 
+    const id = Date.now().toString();
+
     switch (tool) {
       case TOOLS.RECT:
         setRects([
           ...rects,
-          { x: pos.x, y: pos.y, height: 0, width: 0, color },
+          { id, x: pos.x, y: pos.y, height: 0, width: 0, color },
         ]);
         break;
       case TOOLS.CIRCLE:
-        setCircles([...circles, { x: pos.x, y: pos.y, radius: 0, color }]);
+        setCircles([...circles, { id, x: pos.x, y: pos.y, radius: 0, color }]);
         break;
       case TOOLS.SCRIBBLE:
-        setLines([...lines, { points: [pos.x, pos.y], color }]);
+        setLines([...lines, { id, points: [pos.x, pos.y], color }]);
         break;
       case TOOLS.ARROW:
-        setArrows([...arrows, { points: [pos.x, pos.y], color }]);
+        setArrows([...arrows, { id, points: [pos.x, pos.y], color }]);
         break;
       default:
         break;
@@ -130,6 +133,7 @@ export default function StageComponent() {
 
     const target = e.currentTarget;
     trRef.current?.nodes([target]);
+    setSelected(target as Konva.Node);
   }
 
   function handleSelectTool(tool: string) {
@@ -149,12 +153,39 @@ export default function StageComponent() {
 
     if (!pos) return;
 
-    setTexts([...texts, { x: pos.x, y: pos.y, text: "", color }]);
+    const id = Date.now().toString();
+
+    setTexts([...texts, { id, x: pos.x, y: pos.y, text: "", color }]);
   }
 
   function handleSave() {
     const uri = stageRef?.current?.toBlob;
   }
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Backspace" && selected) {
+        const nodeId = selected.id();
+
+        // The following is inefficient but I don't care
+        // There's a simple way to fix it by adding some "type" string field
+        // to every Shape Type we have
+        setRects(rects.filter((rect) => rect.id !== nodeId));
+        setCircles(circles.filter((circle) => circle.id !== nodeId));
+        setLines(lines.filter((line) => line.id !== nodeId));
+        setArrows(arrows.filter((arrow) => arrow.id !== nodeId));
+        setTexts(texts.filter((text) => text.id !== nodeId));
+
+        trRef.current?.nodes([]);
+        setSelected(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selected, rects, circles]);
 
   return (
     <div>
@@ -226,6 +257,7 @@ export default function StageComponent() {
 
           {rects.map((rect) => (
             <Rect
+              id={rect.id}
               // I know you are wondering what all this maths is about
               // But don't worry about it.
               // Trust.
@@ -237,6 +269,7 @@ export default function StageComponent() {
               cornerRadius={10}
               stroke={rect.color}
               strokeWidth={3}
+              strokeScaleEnabled={false}
               onClick={handleClick}
               draggable={isDraggable}
             />
@@ -244,11 +277,13 @@ export default function StageComponent() {
 
           {circles.map((circle) => (
             <Circle
+              id={circle.id}
               x={circle.x}
               y={circle.y}
               radius={circle.radius}
               stroke={circle.color}
               strokeWidth={3}
+              strokeScaleEnabled={false}
               onClick={handleClick}
               draggable={isDraggable}
             />
@@ -256,9 +291,11 @@ export default function StageComponent() {
 
           {lines.map((line) => (
             <Line
+              id={line.id}
               points={line.points}
               stroke={line.color}
               strokeWidth={3}
+              strokeScaleEnabled={false}
               lineCap={"round"}
               onClick={handleClick}
               draggable={isDraggable}
@@ -267,9 +304,11 @@ export default function StageComponent() {
 
           {arrows.map((arrow) => (
             <Arrow
+              id={arrow.id}
               points={arrow.points}
               stroke={arrow.color}
               strokeWidth={3}
+              strokeScaleEnabled={false}
               pointerWidth={5}
               lineCap={"round"}
               onClick={handleClick}
