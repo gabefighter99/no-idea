@@ -170,6 +170,9 @@ export default function StageComponent() {
         // The following is inefficient but I don't care
         // There's a simple way to fix it by adding some "type" string field
         // to every Shape Type we have
+        // Which I would do
+        // But I don't care lol. I don't see anyone adding so many shapes that
+        // this actually has some performance effect
         setRects(rects.filter((rect) => rect.id !== nodeId));
         setCircles(circles.filter((circle) => circle.id !== nodeId));
         setLines(lines.filter((line) => line.id !== nodeId));
@@ -178,6 +181,8 @@ export default function StageComponent() {
 
         trRef.current?.nodes([]);
         setSelected(null);
+      } else if (e.key === "Escape" && isTyping.current) {
+        // Escape the typing
       }
     };
 
@@ -185,7 +190,7 @@ export default function StageComponent() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [selected, rects, circles]);
+  }, [selected, rects, circles, lines, arrows, texts]);
 
   return (
     <div>
