@@ -4,7 +4,8 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import Board from "./Board";
-import StageComponent from "./stage/Stage";
+import StageComponent from "./components/Stage";
+import "./fonts/IndieFlower-Regular.ttf";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,

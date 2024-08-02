@@ -7,6 +7,7 @@ import {
   Circle,
   Transformer,
 } from "react-konva";
+import { Html } from "react-konva-utils";
 import { useEffect, useRef, useState } from "react";
 import {
   PiPaintBrush,
@@ -22,6 +23,7 @@ import {
 import Konva from "konva";
 import { Button, ColorDiv, ColorInput } from "./styled";
 import { TOOLS, RectType, CircleType, LineType, TextType } from "./constants";
+import EditableTextArea from "./editable-text//EditableTextArea";
 
 export default function StageComponent() {
   const stageRef = useRef<Konva.Stage>(null);
@@ -43,7 +45,7 @@ export default function StageComponent() {
   const [texts, setTexts] = useState<TextType[]>([]);
 
   function handlePtrDown() {
-    if (tool === TOOLS.HAND) return;
+    if (tool === TOOLS.HAND || tool === TOOLS.TEXT) return;
     if (!stageRef.current) return;
 
     isDrawing.current = true;
@@ -82,6 +84,7 @@ export default function StageComponent() {
 
   function handlePtrMove() {
     if (!isDrawing.current) return;
+    if (isTyping.current) return;
 
     if (tool === TOOLS.HAND) return;
     if (!stageRef.current) return;
@@ -155,7 +158,7 @@ export default function StageComponent() {
 
     const id = Date.now().toString();
 
-    setTexts([...texts, { id, x: pos.x, y: pos.y, text: "", color }]);
+    setTexts([...texts, { id, x: pos.x, y: pos.y, text: "Text", color }]);
   }
 
   function handleSave() {
@@ -319,6 +322,10 @@ export default function StageComponent() {
               onClick={handleClick}
               draggable={isDraggable}
             />
+          ))}
+
+          {texts.map((text) => (
+            <EditableTextArea {...text} />
           ))}
         </Layer>
       </Stage>
