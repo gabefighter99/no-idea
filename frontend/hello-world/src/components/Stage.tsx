@@ -17,8 +17,9 @@ import {
   TextType,
   ACTION,
 } from "./constants";
-import EditableTextArea from "./editable-text//EditableTextArea";
+import TextAreaInput from "./editable-text/TextAreaInput";
 import Toolbar from "./Toolbar";
+import StaticKonvaText from "./editable-text/StaticKonvaText";
 
 export default function StageComponent() {
   const stageRef = useRef<Konva.Stage>(null);
@@ -39,7 +40,6 @@ export default function StageComponent() {
   const [texts, setTexts] = useState<TextType[]>([]);
 
   function handlePtrDown() {
-    console.log("texts", texts);
     if (tool === TOOLS.HAND || tool === TOOLS.TEXT) return;
     if (!stageRef.current) return;
 
@@ -277,7 +277,8 @@ export default function StageComponent() {
           ))}
 
           {texts.map((text) => (
-            <EditableTextArea {...text} />
+            <StaticKonvaText text={text} handleClick={handleClick} />
+            // <TextAreaInput text={text} />
           ))}
         </Layer>
       </Stage>
