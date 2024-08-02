@@ -1,7 +1,21 @@
 import { Html } from "react-konva-utils";
 import { TextType } from "../constants";
 
-export default function EditableTextArea(text: TextType) {
+type EditableTextAreaProps = {
+  text: TextType;
+  // Initially, I was thinking of updating the value of the text in question
+  // every time a a keystroke happens.
+  // But now I think this is completely unnecessary.
+  // My Plan is to have this EditableTextArea and the StaticKonvaText components
+  // be wrapped in one and to toggle between them depending on wheether we're
+  // editing on not.
+  // During that toggle I can update the value I need to.
+
+  // texts: TextType[];
+  // setTexts: React.Dispatch<React.SetStateAction<TextType[]>>;
+};
+
+const EditableTextArea = ({ text }: EditableTextAreaProps) => {
   return (
     <Html
       groupProps={{ x: text.x, y: text.y }}
@@ -10,6 +24,9 @@ export default function EditableTextArea(text: TextType) {
       <div
         contentEditable
         id={text.id}
+        onKeyDown={() => {
+          // setTexts
+        }}
         style={{
           left: text.x,
           top: text.y,
@@ -30,4 +47,6 @@ export default function EditableTextArea(text: TextType) {
       </div>
     </Html>
   );
-}
+};
+
+export default EditableTextArea;

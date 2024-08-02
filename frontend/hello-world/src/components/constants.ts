@@ -9,6 +9,12 @@ export const TOOLS = {
   TEXT: "TEXT",
 };
 
+export const ACTION = {
+  NONE: "NONE",
+  DRAWING: "DRAWING",
+  TYPING: "TYPING",
+};
+
 export type RectType = {
   id: string;
   x: number;

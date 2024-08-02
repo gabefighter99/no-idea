@@ -3,8 +3,6 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import Board from "./Board";
-import StageComponent from "./components/Stage";
 import "./fonts/IndieFlower-Regular.ttf";
 
 const root = ReactDOM.createRoot(
@@ -12,7 +10,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <StageComponent />
+    <App />
   </React.StrictMode>,
 );
 

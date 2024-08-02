@@ -7,23 +7,18 @@ import {
   Circle,
   Transformer,
 } from "react-konva";
-import { Html } from "react-konva-utils";
 import { useEffect, useRef, useState } from "react";
-import {
-  PiPaintBrush,
-  PiRectangle,
-  PiCircle,
-  PiDiamond,
-  PiHandLight,
-  PiCylinder,
-  PiTextAa,
-  PiArrowRight,
-  PiDownload,
-} from "react-icons/pi";
 import Konva from "konva";
-import { Button, ColorDiv, ColorInput } from "./styled";
-import { TOOLS, RectType, CircleType, LineType, TextType } from "./constants";
+import {
+  TOOLS,
+  RectType,
+  CircleType,
+  LineType,
+  TextType,
+  ACTION,
+} from "./constants";
 import EditableTextArea from "./editable-text//EditableTextArea";
+import Toolbar from "./Toolbar";
 
 export default function StageComponent() {
   const stageRef = useRef<Konva.Stage>(null);
@@ -34,8 +29,7 @@ export default function StageComponent() {
   const [color, setColor] = useState("#6A5ACD");
   const [selected, setSelected] = useState<Konva.Node | null>(null);
 
-  const isDrawing = useRef(false);
-  const isTyping = useRef(false);
+  const action = useRef(ACTION.NONE);
   const isDraggable = tool === TOOLS.HAND;
 
   const [rects, setRects] = useState<RectType[]>([]);
@@ -45,10 +39,11 @@ export default function StageComponent() {
   const [texts, setTexts] = useState<TextType[]>([]);
 
   function handlePtrDown() {
+    console.log("texts", texts);
     if (tool === TOOLS.HAND || tool === TOOLS.TEXT) return;
     if (!stageRef.current) return;
 
-    isDrawing.current = true;
+    action.current = ACTION.DRAWING;
 
     const stage = stageRef.current;
     const pos = stage.getPointerPosition();
@@ -79,14 +74,11 @@ export default function StageComponent() {
   }
 
   function handlePtrUp() {
-    isDrawing.current = false;
+    action.current = ACTION.NONE;
   }
 
   function handlePtrMove() {
-    if (!isDrawing.current) return;
-    if (isTyping.current) return;
-
-    if (tool === TOOLS.HAND) return;
+    if (tool === TOOLS.HAND || action.current !== ACTION.DRAWING) return;
     if (!stageRef.current) return;
 
     const stage = stageRef.current;
@@ -139,17 +131,11 @@ export default function StageComponent() {
     setSelected(target as Konva.Node);
   }
 
-  function handleSelectTool(tool: string) {
-    isTyping.current = false;
-    trRef.current?.nodes([]);
-    setTool(tool);
-  }
-
   function handleDblTapClick() {
     if (tool !== TOOLS.TEXT) return;
     if (!stageRef.current) return;
 
-    isTyping.current = true;
+    action.current = ACTION.TYPING;
 
     const stage = stageRef.current;
     const pos = stage.getPointerPosition();
@@ -184,8 +170,10 @@ export default function StageComponent() {
 
         trRef.current?.nodes([]);
         setSelected(null);
-      } else if (e.key === "Escape" && isTyping.current) {
-        // Escape the typing
+      } else if (action.current === ACTION.TYPING) {
+        if (e.key === "Escape") return;
+
+        // amend current text
       }
     };
 
@@ -197,48 +185,12 @@ export default function StageComponent() {
 
   return (
     <div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          padding: "10px",
-        }}
-      >
-        <Button onClick={() => handleSelectTool(TOOLS.HAND)}>
-          <PiHandLight size="2em" />
-        </Button>
-        <Button onClick={() => handleSelectTool(TOOLS.SCRIBBLE)}>
-          <PiPaintBrush size="2em" />
-        </Button>
-        <Button onClick={() => handleSelectTool(TOOLS.RECT)}>
-          <PiRectangle size="2em" />
-        </Button>
-        <Button onClick={() => handleSelectTool(TOOLS.CIRCLE)}>
-          <PiCircle size="2em" />
-        </Button>
-        <Button onClick={() => handleSelectTool(TOOLS.DIAMOND)}>
-          <PiDiamond size="2em" />
-        </Button>
-        <Button onClick={() => handleSelectTool(TOOLS.CYLINDER)}>
-          <PiCylinder size="2em" />
-        </Button>
-        <Button onClick={() => handleSelectTool(TOOLS.ARROW)}>
-          <PiArrowRight size="2em" />
-        </Button>
-        <Button onClick={() => handleSelectTool(TOOLS.TEXT)}>
-          <PiTextAa size="2em" />
-        </Button>
-        <Button onClick={() => {}}>
-          <PiDownload size="2em" />
-        </Button>
-        <ColorDiv>
-          <ColorInput
-            type="color"
-            value={color}
-            onChange={(e) => setColor(e.target.value)}
-          />
-        </ColorDiv>
-      </div>
+      <Toolbar
+        trRef={trRef}
+        setTool={setTool}
+        color={color}
+        setColor={setColor}
+      />
       <Stage
         ref={stageRef}
         width={window.innerWidth}
