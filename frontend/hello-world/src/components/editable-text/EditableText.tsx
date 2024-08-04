@@ -13,13 +13,26 @@ type EditableTextProps = {
   // I'll toggle between them depending on whether we're editing on not.
   // During that toggle I can update the value of texts.
 
-  texts: TextType[];
   setTexts: React.Dispatch<React.SetStateAction<TextType[]>>;
 };
 
-const EditableText = ({ text, action, handleClick }: EditableTextProps) => {
-  return action.current === ACTION.TYPING ? (
-    <TextAreaInput text={text} />
+// A couple problems left:
+
+// 1) I can't re-edit the same textbox. Double clicking just creates a new
+// Text Element
+// 2) I probably need an onDragStart/onDragEnd event handler
+// 3) width and height aren't being passed from TextAreaInput to Static
+// 4) I can drag elements even if I'm not using "HAND" tool. This is
+// probably fine, but could cause problems
+
+const EditableText = ({
+  text,
+  action,
+  handleClick,
+  setTexts,
+}: EditableTextProps) => {
+  return text.typing ? (
+    <TextAreaInput text={text} action={action} setTexts={setTexts} />
   ) : (
     <StaticKonvaText text={text} handleClick={handleClick} />
   );

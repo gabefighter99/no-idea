@@ -17,9 +17,8 @@ import {
   TextType,
   ACTION,
 } from "./constants";
-import TextAreaInput from "./editable-text/TextAreaInput";
 import Toolbar from "./Toolbar";
-import StaticKonvaText from "./editable-text/StaticKonvaText";
+import EditableText from "./editable-text/EditableText";
 
 export default function StageComponent() {
   const stageRef = useRef<Konva.Stage>(null);
@@ -144,7 +143,10 @@ export default function StageComponent() {
 
     const id = Date.now().toString();
 
-    setTexts([...texts, { id, x: pos.x, y: pos.y, text: "Text", color }]);
+    setTexts([
+      ...texts,
+      { id, x: pos.x, y: pos.y, text: "Text", typing: true, color },
+    ]);
   }
 
   function handleSave() {
@@ -277,8 +279,12 @@ export default function StageComponent() {
           ))}
 
           {texts.map((text) => (
-            <StaticKonvaText text={text} handleClick={handleClick} />
-            // <TextAreaInput text={text} />
+            <EditableText
+              text={text}
+              action={action}
+              handleClick={handleClick}
+              setTexts={setTexts}
+            />
           ))}
         </Layer>
       </Stage>

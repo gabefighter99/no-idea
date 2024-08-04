@@ -15,6 +15,9 @@ const StaticKonvaText = ({ text, handleClick }: StaticKonvaTextProps) => {
       text={text.text}
       height={100}
       width={100}
+      fontFamily={"Indie Flower"}
+      fontSize={16}
+      fontStyle={"bold"}
       onClick={handleClick}
       draggable
     />
