@@ -20,15 +20,20 @@ const TextAreaInput = ({ text, action, setTexts }: TextAreaInputProps) => {
   // This will trigger a switch from "Editable" TextAreaInput component
   // to "Static" StaticKonvaText component
   const handleBlur = (evt: React.FocusEvent<HTMLInputElement>) => {
+    if (!textRef.current) return;
+
+    const newText = evt.target.innerText;
+    const newHeight = textRef.current.offsetHeight;
+    const newWidth = textRef.current.offsetWidth;
+
     setTexts((prevTexts) => {
       let idx = prevTexts.findIndex((cand) => cand.id === text.id);
       prevTexts.splice(idx, 1, {
-        id: text.id,
-        x: text.x,
-        y: text.y,
-        text: evt.target.innerText,
+        ...text,
+        height: newHeight,
+        width: newWidth,
+        text: newText,
         typing: false,
-        color: text.color,
       });
       return prevTexts.concat();
     });
@@ -49,8 +54,9 @@ const TextAreaInput = ({ text, action, setTexts }: TextAreaInputProps) => {
           left: text.x,
           top: text.y,
           width: "max-content",
+          lineHeight: "1",
           // textAlign: "center",
-          padding: "0px",
+          padding: "5px",
           margin: "0px",
           background: "none",
           outline: "none",

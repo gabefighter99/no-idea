@@ -16,6 +16,7 @@ import {
   LineType,
   TextType,
   ACTION,
+  Shape,
 } from "./constants";
 import Toolbar from "./Toolbar";
 import EditableText from "./editable-text/EditableText";
@@ -122,7 +123,7 @@ export default function StageComponent() {
     }
   }
 
-  function handleClick(e: Konva.KonvaEventObject<MouseEvent>) {
+  function handleSelect(e: Konva.KonvaEventObject<MouseEvent>) {
     if (tool !== TOOLS.HAND) return;
 
     const target = e.currentTarget;
@@ -135,18 +136,42 @@ export default function StageComponent() {
     if (!stageRef.current) return;
 
     action.current = ACTION.TYPING;
-
     const stage = stageRef.current;
     const pos = stage.getPointerPosition();
 
     if (!pos) return;
 
-    const id = Date.now().toString();
+    const existing = texts.find(
+      (text) =>
+        pos.x >= text.x &&
+        pos.x <= text.x + text.width &&
+        pos.y >= text.y &&
+        pos.y <= text.y + text.height,
+    );
 
-    setTexts([
-      ...texts,
-      { id, x: pos.x, y: pos.y, text: "Text", typing: true, color },
-    ]);
+    if (existing) {
+      setTexts((prevTexts) => {
+        let idx = prevTexts.findIndex((cand) => cand.id === existing.id);
+        prevTexts.splice(idx, 1, { ...existing, typing: true });
+        return [...prevTexts];
+      });
+    } else {
+      const id = Date.now().toString();
+
+      setTexts((prevTexts) => [
+        ...prevTexts,
+        {
+          id,
+          x: pos.x,
+          y: pos.y,
+          text: "Text",
+          typing: true,
+          color,
+          width: 100,
+          height: 100,
+        },
+      ]);
+    }
   }
 
   function handleSave() {
@@ -232,8 +257,20 @@ export default function StageComponent() {
               stroke={rect.color}
               strokeWidth={3}
               strokeScaleEnabled={false}
-              onClick={handleClick}
+              onClick={handleSelect}
               draggable={isDraggable}
+              // onDragEnd={(e: Konva.KonvaEventObject<DragEvent>) => {
+              //   const { x, y } = e.target.attrs;
+              //   setRects((prevs) => {
+              //     const idx = prevs.findIndex((cand) => cand.id === rect.id);
+              //     prevs.splice(idx, 1, {
+              //       ...rect,
+              //       x,
+              //       y,
+              //     });
+              //     return prevs.concat();
+              //   });
+              // }}
             />
           ))}
 
@@ -246,7 +283,7 @@ export default function StageComponent() {
               stroke={circle.color}
               strokeWidth={3}
               strokeScaleEnabled={false}
-              onClick={handleClick}
+              onClick={handleSelect}
               draggable={isDraggable}
             />
           ))}
@@ -259,7 +296,7 @@ export default function StageComponent() {
               strokeWidth={3}
               strokeScaleEnabled={false}
               lineCap={"round"}
-              onClick={handleClick}
+              onClick={handleSelect}
               draggable={isDraggable}
             />
           ))}
@@ -273,7 +310,7 @@ export default function StageComponent() {
               strokeScaleEnabled={false}
               pointerWidth={5}
               lineCap={"round"}
-              onClick={handleClick}
+              onClick={handleSelect}
               draggable={isDraggable}
             />
           ))}
@@ -282,7 +319,7 @@ export default function StageComponent() {
             <EditableText
               text={text}
               action={action}
-              handleClick={handleClick}
+              handleSelect={handleSelect}
               setTexts={setTexts}
             />
           ))}

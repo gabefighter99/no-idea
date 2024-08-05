@@ -4,22 +4,40 @@ import { TextType } from "../constants";
 
 type StaticKonvaTextProps = {
   text: TextType;
-  handleClick: (e: Konva.KonvaEventObject<MouseEvent>) => void;
+  handleSelect: (e: Konva.KonvaEventObject<MouseEvent>) => void;
+  setTexts: React.Dispatch<React.SetStateAction<TextType[]>>;
 };
 
-const StaticKonvaText = ({ text, handleClick }: StaticKonvaTextProps) => {
+const StaticKonvaText = ({
+  text,
+  handleSelect,
+  setTexts,
+}: StaticKonvaTextProps) => {
   return (
     <Text
+      id={text.id}
       x={text.x}
       y={text.y}
       text={text.text}
-      height={100}
-      width={100}
+      height={text.height}
+      width={text.width}
       fontFamily={"Indie Flower"}
       fontSize={16}
       fontStyle={"bold"}
-      onClick={handleClick}
+      onClick={handleSelect}
       draggable
+      onDragEnd={(e: Konva.KonvaEventObject<DragEvent>) => {
+        const { x, y } = e.target.attrs;
+        setTexts((prevs) => {
+          const idx = prevs.findIndex((cand) => cand.id === text.id);
+          prevs.splice(idx, 1, {
+            ...text,
+            x,
+            y,
+          });
+          return prevs.concat();
+        });
+      }}
     />
   );
 };

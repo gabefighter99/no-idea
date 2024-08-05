@@ -15,6 +15,8 @@ export const ACTION = {
   TYPING: "TYPING",
 };
 
+export type Shape = RectType | CircleType | LineType | TextType;
+
 export type RectType = {
   id: string;
   x: number;
@@ -42,6 +44,8 @@ export type TextType = {
   id: string;
   x: number;
   y: number;
+  height: number;
+  width: number;
   typing: boolean;
   text: string;
   color: string;

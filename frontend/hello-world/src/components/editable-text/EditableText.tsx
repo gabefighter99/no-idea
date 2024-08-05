@@ -6,7 +6,7 @@ import Konva from "konva";
 type EditableTextProps = {
   text: TextType;
   action: React.MutableRefObject<string>;
-  handleClick: (e: Konva.KonvaEventObject<MouseEvent>) => void;
+  handleSelect: (e: Konva.KonvaEventObject<MouseEvent>) => void;
 
   // My Plan is to have this component jump between TextAreaInput and the
   // StaticKonvaText components.
@@ -28,13 +28,17 @@ type EditableTextProps = {
 const EditableText = ({
   text,
   action,
-  handleClick,
+  handleSelect,
   setTexts,
 }: EditableTextProps) => {
   return text.typing ? (
     <TextAreaInput text={text} action={action} setTexts={setTexts} />
   ) : (
-    <StaticKonvaText text={text} handleClick={handleClick} />
+    <StaticKonvaText
+      text={text}
+      handleSelect={handleSelect}
+      setTexts={setTexts}
+    />
   );
 };
 
