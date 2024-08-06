@@ -4,7 +4,6 @@ import {
   PiCircle,
   PiDiamond,
   PiHandLight,
-  PiCylinder,
   PiTextAa,
   PiArrowRight,
   PiDownload,
@@ -49,9 +48,6 @@ const Toolbar = ({ trRef, setTool, color, setColor }: ToolbarProps) => {
       </Button>
       <Button onClick={() => handleSelectTool(TOOLS.DIAMOND)}>
         <PiDiamond size="2em" />
-      </Button>
-      <Button onClick={() => handleSelectTool(TOOLS.CYLINDER)}>
-        <PiCylinder size="2em" />
       </Button>
       <Button onClick={() => handleSelectTool(TOOLS.ARROW)}>
         <PiArrowRight size="2em" />

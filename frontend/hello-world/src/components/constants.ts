@@ -5,7 +5,6 @@ export const TOOLS = {
   RECT: "RECT",
   CIRCLE: "CIRCLE",
   DIAMOND: "DIAMOND",
-  CYLINDER: "CYLINDER",
   TEXT: "TEXT",
 };
 
@@ -14,8 +13,6 @@ export const ACTION = {
   DRAWING: "DRAWING",
   TYPING: "TYPING",
 };
-
-export type Shape = RectType | CircleType | LineType | TextType;
 
 export type RectType = {
   id: string;

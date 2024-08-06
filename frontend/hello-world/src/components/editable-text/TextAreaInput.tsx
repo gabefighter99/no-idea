@@ -41,16 +41,19 @@ const TextAreaInput = ({ text, action, setTexts }: TextAreaInputProps) => {
 
       selection.removeAllRanges();
       selection.addRange(range);
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      handleBlur();
     }
   };
 
   // Persists our div's changes to top level and sets typing to false
   // This will trigger a switch from "Editable" TextAreaInput component
   // to "Static" StaticKonvaText component
-  const handleBlur = (evt: React.FocusEvent<HTMLInputElement>) => {
+  const handleBlur = () => {
     if (!textRef.current) return;
 
-    const newText = evt.target.innerText;
+    const newText = textRef.current.innerText;
     const newHeight = textRef.current.offsetHeight;
     const newWidth = textRef.current.offsetWidth;
 
@@ -95,6 +98,7 @@ const TextAreaInput = ({ text, action, setTexts }: TextAreaInputProps) => {
           fontWeight: "bold",
           whiteSpace: "pre-wrap",
         }}
+        suppressContentEditableWarning
       >
         {text.text}
       </div>

@@ -1,4 +1,4 @@
-import { ACTION, TextType } from "../constants";
+import { TextType } from "../constants";
 import TextAreaInput from "./TextAreaInput";
 import StaticKonvaText from "./StaticKonvaText";
 import Konva from "konva";
@@ -7,23 +7,16 @@ type EditableTextProps = {
   text: TextType;
   action: React.MutableRefObject<string>;
   handleSelect: (e: Konva.KonvaEventObject<MouseEvent>) => void;
-
-  // My Plan is to have this component jump between TextAreaInput and the
-  // StaticKonvaText components.
-  // I'll toggle between them depending on whether we're editing on not.
-  // During that toggle I can update the value of texts.
-
   setTexts: React.Dispatch<React.SetStateAction<TextType[]>>;
 };
 
-// A couple problems left:
+// Toggle between editable TextAreaInput and Static Konva-displayable,
+// resizeable and draggable StaticKonvaText components depending on whether
+// we're editing or not.
 
-// 1) I can't re-edit the same textbox. Double clicking just creates a new
-// Text Element
-// 2) I probably need an onDragStart/onDragEnd event handler
-// 3) width and height aren't being passed from TextAreaInput to Static
-// 4) I can drag elements even if I'm not using "HAND" tool. This is
-// probably fine, but could cause problems
+// Problems left:
+// Resizing. When we resize, we need to update height/width and then when
+// typing we need to match a new font size
 
 const EditableText = ({
   text,

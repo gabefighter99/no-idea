@@ -16,7 +16,6 @@ import {
   LineType,
   TextType,
   ACTION,
-  Shape,
 } from "./constants";
 import Toolbar from "./Toolbar";
 import EditableText from "./editable-text/EditableText";
@@ -197,10 +196,6 @@ export default function StageComponent() {
 
         trRef.current?.nodes([]);
         setSelected(null);
-      } else if (action.current === ACTION.TYPING) {
-        if (e.key === "Escape") return;
-
-        // amend current text
       }
     };
 
@@ -244,7 +239,7 @@ export default function StageComponent() {
 
           {rects.map((rect) => (
             <Rect
-              id={rect.id}
+              key={rect.id}
               // I know you are wondering what all this maths is about
               // But don't worry about it.
               // Trust.
@@ -276,7 +271,7 @@ export default function StageComponent() {
 
           {circles.map((circle) => (
             <Circle
-              id={circle.id}
+              key={circle.id}
               x={circle.x}
               y={circle.y}
               radius={circle.radius}
@@ -290,7 +285,7 @@ export default function StageComponent() {
 
           {lines.map((line) => (
             <Line
-              id={line.id}
+              key={line.id}
               points={line.points}
               stroke={line.color}
               strokeWidth={3}
@@ -303,7 +298,7 @@ export default function StageComponent() {
 
           {arrows.map((arrow) => (
             <Arrow
-              id={arrow.id}
+              key={arrow.id}
               points={arrow.points}
               stroke={arrow.color}
               strokeWidth={3}
@@ -317,6 +312,7 @@ export default function StageComponent() {
 
           {texts.map((text) => (
             <EditableText
+              key={text.id}
               text={text}
               action={action}
               handleSelect={handleSelect}
