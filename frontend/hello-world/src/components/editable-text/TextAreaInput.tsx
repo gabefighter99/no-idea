@@ -16,6 +16,34 @@ const TextAreaInput = ({ text, action, setTexts }: TextAreaInputProps) => {
     if (text.typing && textRef.current) textRef.current.focus();
   }, [textRef, text.typing]);
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    // Emulate Shift-Enter on just Enter. Just Enter does not register as
+    // additional height, which causes issues when handling Blur().
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+
+      // The following could all be replaced with literally just
+      // document.execCommand("insertLineBreak");
+      // Unfortunately execCommand() is deprecated. And of course
+      // there is no official replacement for it.
+
+      const selection = document.getSelection();
+      if (!selection || selection.rangeCount === 0) return;
+
+      const range = selection.getRangeAt(0);
+      range.deleteContents();
+
+      const br = document.createElement("br");
+
+      range.insertNode(br);
+      range.setStartAfter(br);
+      range.setEndAfter(br);
+
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+  };
+
   // Persists our div's changes to top level and sets typing to false
   // This will trigger a switch from "Editable" TextAreaInput component
   // to "Static" StaticKonvaText component
@@ -50,6 +78,7 @@ const TextAreaInput = ({ text, action, setTexts }: TextAreaInputProps) => {
         ref={textRef}
         id={text.id}
         onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
         style={{
           left: text.x,
           top: text.y,
