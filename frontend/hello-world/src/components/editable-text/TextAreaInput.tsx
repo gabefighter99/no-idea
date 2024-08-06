@@ -85,6 +85,7 @@ const TextAreaInput = ({ text, action, setTexts }: TextAreaInputProps) => {
         style={{
           left: text.x,
           top: text.y,
+          fontSize: text.fontSize,
           width: "max-content",
           lineHeight: "1",
           // textAlign: "center",

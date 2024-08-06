@@ -41,6 +41,7 @@ export type TextType = {
   id: string;
   x: number;
   y: number;
+  fontSize: number;
   height: number;
   width: number;
   typing: boolean;
