@@ -8,6 +8,7 @@ type EditableTextProps = {
   action: React.MutableRefObject<string>;
   handleSelect: (e: Konva.KonvaEventObject<MouseEvent>) => void;
   setTexts: React.Dispatch<React.SetStateAction<TextType[]>>;
+  setTool: React.Dispatch<React.SetStateAction<string>>;
 };
 
 // Toggle between editable TextAreaInput and Static Konva-displayable,
@@ -23,9 +24,15 @@ const EditableText = ({
   action,
   handleSelect,
   setTexts,
+  setTool,
 }: EditableTextProps) => {
   return text.typing ? (
-    <TextAreaInput text={text} action={action} setTexts={setTexts} />
+    <TextAreaInput
+      text={text}
+      action={action}
+      setTexts={setTexts}
+      setTool={setTool}
+    />
   ) : (
     <StaticKonvaText
       text={text}

@@ -38,7 +38,7 @@ export default function StageComponent() {
   const [arrows, setArrows] = useState<LineType[]>([]);
   const [texts, setTexts] = useState<TextType[]>([]);
 
-  function handlePtrDown() {
+  const handlePtrDown = () => {
     if (tool === TOOLS.HAND || tool === TOOLS.TEXT) return;
     if (!stageRef.current) return;
 
@@ -70,13 +70,15 @@ export default function StageComponent() {
       default:
         break;
     }
-  }
+  };
 
-  function handlePtrUp() {
+  const handlePtrUp = () => {
+    if (tool === TOOLS.HAND || action.current !== ACTION.DRAWING) return;
     action.current = ACTION.NONE;
-  }
+    setTool(TOOLS.HAND);
+  };
 
-  function handlePtrMove() {
+  const handlePtrMove = () => {
     if (tool === TOOLS.HAND || action.current !== ACTION.DRAWING) return;
     if (!stageRef.current) return;
 
@@ -120,19 +122,21 @@ export default function StageComponent() {
       default:
         break;
     }
-  }
+  };
 
-  function handleSelect(e: Konva.KonvaEventObject<MouseEvent>) {
+  const handleSelect = (e: Konva.KonvaEventObject<MouseEvent>) => {
     if (tool !== TOOLS.HAND) return;
 
     const target = e.currentTarget;
     trRef.current?.nodes([target]);
     setSelected(target as Konva.Node);
-  }
+  };
 
-  function handleDblTapClick() {
-    if (tool !== TOOLS.TEXT) return;
+  const handleDblTapClick = () => {
     if (!stageRef.current) return;
+
+    trRef.current?.nodes([]);
+    setSelected(null);
 
     action.current = ACTION.TYPING;
     const stage = stageRef.current;
@@ -172,11 +176,11 @@ export default function StageComponent() {
         },
       ]);
     }
-  }
+  };
 
-  function handleSave() {
+  const handleSave = () => {
     const uri = stageRef?.current?.toBlob;
-  }
+  };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -232,6 +236,7 @@ export default function StageComponent() {
             height={window.innerHeight}
             fill={bgCol}
             onClick={() => {
+              setSelected(null);
               trRef.current?.nodes([]);
             }}
           ></Rect>
@@ -318,6 +323,7 @@ export default function StageComponent() {
               action={action}
               handleSelect={handleSelect}
               setTexts={setTexts}
+              setTool={setTool}
             />
           ))}
         </Layer>

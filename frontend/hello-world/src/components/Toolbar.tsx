@@ -20,11 +20,11 @@ type ToolbarProps = {
 };
 
 const Toolbar = ({ trRef, setTool, color, setColor }: ToolbarProps) => {
-  function handleSelectTool(tool: string) {
+  const handleSelectTool = (tool: string) => {
     // Deselect transformer
     trRef.current?.nodes([]);
     setTool(tool);
-  }
+  };
 
   return (
     <div

@@ -1,14 +1,20 @@
 import { useEffect, useRef } from "react";
 import { Html } from "react-konva-utils";
-import { ACTION, TextType } from "../constants";
+import { ACTION, TextType, TOOLS } from "../constants";
 
 type TextAreaInputProps = {
   text: TextType;
   action: React.MutableRefObject<string>;
   setTexts: React.Dispatch<React.SetStateAction<TextType[]>>;
+  setTool: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const TextAreaInput = ({ text, action, setTexts }: TextAreaInputProps) => {
+const TextAreaInput = ({
+  text,
+  action,
+  setTexts,
+  setTool,
+}: TextAreaInputProps) => {
   const textRef = useRef<HTMLInputElement>(null);
 
   // Autofocuses on current Text element, IF we are typing THIS particular element
@@ -69,6 +75,7 @@ const TextAreaInput = ({ text, action, setTexts }: TextAreaInputProps) => {
       return prevTexts.concat();
     });
     action.current = ACTION.NONE;
+    setTool(TOOLS.HAND);
   };
 
   return (
