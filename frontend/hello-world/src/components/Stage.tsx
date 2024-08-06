@@ -26,7 +26,7 @@ export default function StageComponent() {
 
   const [tool, setTool] = useState(TOOLS.HAND);
   const [bgCol, setBgCol] = useState("#FFFFFF");
-  const [color, setColor] = useState("#6A5ACD");
+  const [color, setColor] = useState("#000000");
   const [selected, setSelected] = useState<Konva.Node | null>(null);
 
   const action = useRef(ACTION.NONE);
@@ -214,6 +214,7 @@ export default function StageComponent() {
     <div>
       <Toolbar
         trRef={trRef}
+        tool={tool}
         setTool={setTool}
         color={color}
         setColor={setColor}
@@ -256,7 +257,7 @@ export default function StageComponent() {
               width={Math.abs(rect.width)}
               cornerRadius={10}
               stroke={rect.color}
-              strokeWidth={3}
+              strokeWidth={2}
               strokeScaleEnabled={false}
               onClick={handleSelect}
               draggable={isDraggable}
@@ -282,7 +283,7 @@ export default function StageComponent() {
               y={circle.y}
               radius={circle.radius}
               stroke={circle.color}
-              strokeWidth={3}
+              strokeWidth={2}
               strokeScaleEnabled={false}
               onClick={handleSelect}
               draggable={isDraggable}
@@ -294,7 +295,7 @@ export default function StageComponent() {
               key={line.id}
               points={line.points}
               stroke={line.color}
-              strokeWidth={3}
+              strokeWidth={2}
               strokeScaleEnabled={false}
               lineCap={"round"}
               onClick={handleSelect}
@@ -307,7 +308,7 @@ export default function StageComponent() {
               key={arrow.id}
               points={arrow.points}
               stroke={arrow.color}
-              strokeWidth={3}
+              strokeWidth={2}
               strokeScaleEnabled={false}
               pointerWidth={5}
               lineCap={"round"}

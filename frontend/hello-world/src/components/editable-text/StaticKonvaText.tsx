@@ -24,6 +24,7 @@ const StaticKonvaText = ({
       text={text.text}
       height={text.height}
       width={text.width}
+      fill={text.color}
       fontFamily={"Indie Flower"}
       fontSize={text.fontSize}
       fontStyle={"bold"}

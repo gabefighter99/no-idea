@@ -93,6 +93,7 @@ const TextAreaInput = ({
           left: text.x,
           top: text.y,
           fontSize: text.fontSize,
+          color: text.color,
           width: "max-content",
           lineHeight: "1",
           // textAlign: "center",
