@@ -2,6 +2,7 @@ import Konva from "konva";
 import { useRef } from "react";
 import { Text } from "react-konva";
 import { TextType } from "../constants";
+import { handleMouseOut, handleMouseOver } from "../eventHandlers";
 
 type StaticKonvaTextProps = {
   text: TextType;
@@ -29,6 +30,8 @@ const StaticKonvaText = ({
       fontSize={text.fontSize}
       fontStyle={"bold"}
       onClick={handleSelect}
+      onMouseOver={handleMouseOver}
+      onMouseOut={handleMouseOut}
       onTransformEnd={() => {
         if (!textRef.current) return;
         const textNode = textRef.current;

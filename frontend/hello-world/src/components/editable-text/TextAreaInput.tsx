@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Html } from "react-konva-utils";
 import { ACTION, TextType, TOOLS } from "../constants";
+import { handleMouseOut, handleMouseOver } from "../eventHandlers";
 import { EditableDiv } from "../styled";
 
 type TextAreaInputProps = {
@@ -90,6 +91,8 @@ const TextAreaInput = ({
         id={text.id}
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
+        onMouseOver={handleMouseOver}
+        onMouseOut={handleMouseOut}
         style={{
           left: text.x,
           top: text.y,

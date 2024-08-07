@@ -19,6 +19,7 @@ import {
 } from "./constants";
 import Toolbar from "./Toolbar";
 import EditableText from "./editable-text/EditableText";
+import { handleMouseOut, handleMouseOver } from "./eventHandlers";
 
 export default function StageComponent() {
   const stageRef = useRef<Konva.Stage>(null);
@@ -260,6 +261,8 @@ export default function StageComponent() {
               strokeWidth={2}
               strokeScaleEnabled={false}
               onClick={handleSelect}
+              onMouseOver={handleMouseOver}
+              onMouseOut={handleMouseOut}
               draggable={isDraggable}
               // onDragEnd={(e: Konva.KonvaEventObject<DragEvent>) => {
               //   const { x, y } = e.target.attrs;
@@ -286,6 +289,8 @@ export default function StageComponent() {
               strokeWidth={2}
               strokeScaleEnabled={false}
               onClick={handleSelect}
+              onMouseOver={handleMouseOver}
+              onMouseOut={handleMouseOut}
               draggable={isDraggable}
             />
           ))}
@@ -299,6 +304,8 @@ export default function StageComponent() {
               strokeScaleEnabled={false}
               lineCap={"round"}
               onClick={handleSelect}
+              onMouseOver={handleMouseOver}
+              onMouseOut={handleMouseOut}
               draggable={isDraggable}
             />
           ))}
@@ -313,6 +320,8 @@ export default function StageComponent() {
               pointerWidth={5}
               lineCap={"round"}
               onClick={handleSelect}
+              onMouseOver={handleMouseOver}
+              onMouseOut={handleMouseOut}
               draggable={isDraggable}
             />
           ))}
