@@ -1,5 +1,20 @@
 import styled from "styled-components";
 
+export const ToolbarDiv = styled.div`
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
+  box-shadow:
+    0 1px 2px 0 rgba(0, 0, 0, 0.02),
+    0 -1px 2px 0 rgba(0, 0, 0, 0.02);
+  margin-inline: auto;
+  width: fit-content;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+`;
+
 export const Button = styled.button<{ $set?: boolean }>`
   background-color: ${(props) => (props.$set ? "#d5c1dc" : "#ffffff")};
   border-color: #ffffff;
@@ -24,18 +39,17 @@ export const ColorButton = styled.button<{ $set?: boolean; $color?: string }>`
   margin: 5px 3px 0px;
 `;
 
-export const ColorDiv = styled.div`
-  width: 2em;
-  height: 2em;
-  overflow: hidden;
-  border: none;
-  border-radius: 10px;
-  margin: 2px 3px 1px;
-`;
-export const ColorInput = styled.input`
-  width: 150%;
-  height: 150%;
-  border: none;
+export const EditableDiv = styled.div`
+  width: max-content;
+  line-height: 1;
+  // textAlign: center;
+  padding: 5px;
+  margin: 0px;
+  background: none;
   outline: none;
-  scale: 3;
+  resize: none;
+  overflow: hidden;
+  font-family: Indie Flower;
+  font-weight: bold;
+  white-space: pre-wrap;
 `;

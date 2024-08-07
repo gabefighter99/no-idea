@@ -14,6 +14,13 @@ export const ACTION = {
   TYPING: "TYPING",
 };
 
+export const COLORS = {
+  CYAN: "#53d1df",
+  RUBY: "#e53f71",
+  PURPLE: "#6a5acd",
+  BLACK: "#000000",
+};
+
 export type RectType = {
   id: string;
   x: number;

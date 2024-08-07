@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Html } from "react-konva-utils";
 import { ACTION, TextType, TOOLS } from "../constants";
+import { EditableDiv } from "../styled";
 
 type TextAreaInputProps = {
   text: TextType;
@@ -83,7 +84,7 @@ const TextAreaInput = ({
       groupProps={{ x: text.x, y: text.y }}
       divProps={{ style: { opacity: 1 } }}
     >
-      <div
+      <EditableDiv
         contentEditable
         ref={textRef}
         id={text.id}
@@ -94,23 +95,11 @@ const TextAreaInput = ({
           top: text.y,
           fontSize: text.fontSize,
           color: text.color,
-          width: "max-content",
-          lineHeight: "1",
-          // textAlign: "center",
-          padding: "5px",
-          margin: "0px",
-          background: "none",
-          outline: "none",
-          resize: "none",
-          overflow: "hidden",
-          fontFamily: "Indie Flower",
-          fontWeight: "bold",
-          whiteSpace: "pre-wrap",
         }}
         suppressContentEditableWarning
       >
         {text.text}
-      </div>
+      </EditableDiv>
     </Html>
   );
 };
