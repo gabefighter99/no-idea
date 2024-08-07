@@ -1,13 +1,12 @@
 import {
   PiPaintBrush,
-  PiRectangle,
   PiCircle,
-  PiDiamond,
   PiHandLight,
   PiTextAa,
-  PiArrowRight,
   PiDownload,
 } from "react-icons/pi";
+import { IoRemoveOutline, IoSquareOutline } from "react-icons/io5";
+import { HiArrowLongRight } from "react-icons/hi2";
 import Konva from "konva";
 import { COLORS, TOOLS } from "./constants";
 import { Button, ColorButton, ToolbarDiv } from "./styled";
@@ -35,11 +34,46 @@ const Toolbar = ({ trRef, tool, setTool, color, setColor }: ToolbarProps) => {
 
   return (
     <ToolbarDiv>
+      <Button onClick={() => {}}>
+        <PiDownload size={iconSize} />
+      </Button>
       <Button
         $set={tool === TOOLS.HAND}
         onClick={() => handleSelectTool(TOOLS.HAND)}
       >
         <PiHandLight size={iconSize} />
+      </Button>
+      <Button
+        $set={tool === TOOLS.RECT}
+        onClick={() => handleSelectTool(TOOLS.RECT)}
+      >
+        <IoSquareOutline size={iconSize} />
+      </Button>
+      <Button
+        $set={tool === TOOLS.CIRCLE}
+        onClick={() => handleSelectTool(TOOLS.CIRCLE)}
+      >
+        <PiCircle size={iconSize} />
+      </Button>
+      {/*
+      <Button
+        $set={tool === TOOLS.DIAMOND} // this can be just a Rect with 45 degree rotation
+        onClick={() => handleSelectTool(TOOLS.DIAMOND)}
+      >
+        <PiDiamond size={iconSize} />
+      </Button>
+      */}
+      <Button
+        $set={tool === TOOLS.ARROW}
+        onClick={() => handleSelectTool(TOOLS.ARROW)}
+      >
+        <HiArrowLongRight size={iconSize} />
+      </Button>
+      <Button
+        $set={tool === TOOLS.LINE}
+        onClick={() => handleSelectTool(TOOLS.LINE)}
+      >
+        <IoRemoveOutline size={iconSize} />
       </Button>
       <Button
         $set={tool === TOOLS.SCRIBBLE}
@@ -48,37 +82,10 @@ const Toolbar = ({ trRef, tool, setTool, color, setColor }: ToolbarProps) => {
         <PiPaintBrush size={iconSize} />
       </Button>
       <Button
-        $set={tool === TOOLS.RECT}
-        onClick={() => handleSelectTool(TOOLS.RECT)}
-      >
-        <PiRectangle size={iconSize} />
-      </Button>
-      <Button
-        $set={tool === TOOLS.CIRCLE}
-        onClick={() => handleSelectTool(TOOLS.CIRCLE)}
-      >
-        <PiCircle size={iconSize} />
-      </Button>
-      <Button
-        $set={tool === TOOLS.DIAMOND}
-        onClick={() => handleSelectTool(TOOLS.DIAMOND)}
-      >
-        <PiDiamond size={iconSize} />
-      </Button>
-      <Button
-        $set={tool === TOOLS.ARROW}
-        onClick={() => handleSelectTool(TOOLS.ARROW)}
-      >
-        <PiArrowRight size={iconSize} />
-      </Button>
-      <Button
         $set={tool === TOOLS.TEXT}
         onClick={() => handleSelectTool(TOOLS.TEXT)}
       >
         <PiTextAa size={iconSize} />
-      </Button>
-      <Button onClick={() => {}}>
-        <PiDownload size={iconSize} />
       </Button>
       <ColorButton
         $set={color === COLORS.CYAN}

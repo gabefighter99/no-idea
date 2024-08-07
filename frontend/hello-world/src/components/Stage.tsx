@@ -62,7 +62,7 @@ export default function StageComponent() {
       case TOOLS.CIRCLE:
         setCircles([...circles, { id, x: pos.x, y: pos.y, radius: 0, color }]);
         break;
-      case TOOLS.SCRIBBLE:
+      case (TOOLS.SCRIBBLE, TOOLS.LINE):
         setLines([...lines, { id, points: [pos.x, pos.y], color }]);
         break;
       case TOOLS.ARROW:
@@ -111,6 +111,13 @@ export default function StageComponent() {
         scribble.points = scribble.points.concat([pos.x, pos.y]);
 
         lines.splice(lines.length - 1, 1, scribble);
+        setLines(lines.concat());
+        break;
+      case TOOLS.LINE:
+        let line = lines[lines.length - 1];
+        line.points = [line.points[0], line.points[1], pos.x, pos.y];
+
+        lines.splice(lines.length - 1, 1, line);
         setLines(lines.concat());
         break;
       case TOOLS.ARROW:

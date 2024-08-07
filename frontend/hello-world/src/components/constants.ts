@@ -1,6 +1,7 @@
 export const TOOLS = {
   HAND: "HAND",
   SCRIBBLE: "SCRIBBLE",
+  LINE: "LINE",
   ARROW: "ARROW",
   RECT: "RECT",
   CIRCLE: "CIRCLE",
