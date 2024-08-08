@@ -19,6 +19,7 @@ const StaticKonvaText = ({
   return (
     <Text
       id={text.id}
+      key={text.id}
       ref={textRef}
       x={text.x}
       y={text.y}

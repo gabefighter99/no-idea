@@ -16,6 +16,7 @@ import {
   LineType,
   TextType,
   ACTION,
+  COLORS,
 } from "./constants";
 import Toolbar from "./Toolbar";
 import EditableText from "./editable-text/EditableText";
@@ -56,13 +57,20 @@ export default function StageComponent() {
       case TOOLS.RECT:
         setRects([
           ...rects,
-          { id, x: pos.x, y: pos.y, height: 0, width: 0, color },
+          { id, x: pos.x, y: pos.y, height: 0, width: 0, rotate: 0, color },
+        ]);
+        break;
+      case TOOLS.DIAMOND:
+        setRects([
+          ...rects,
+          { id, x: pos.x, y: pos.y, height: 0, width: 0, rotate: 45, color },
         ]);
         break;
       case TOOLS.CIRCLE:
         setCircles([...circles, { id, x: pos.x, y: pos.y, radius: 0, color }]);
         break;
-      case (TOOLS.SCRIBBLE, TOOLS.LINE):
+      case TOOLS.LINE:
+      case TOOLS.SCRIBBLE:
         setLines([...lines, { id, points: [pos.x, pos.y], color }]);
         break;
       case TOOLS.ARROW:
@@ -90,9 +98,10 @@ export default function StageComponent() {
 
     switch (tool) {
       case TOOLS.RECT:
+      case TOOLS.DIAMOND:
         let rect = rects[rects.length - 1];
         rect.height = pos.y - rect.y;
-        rect.width = pos.x - rect.x;
+        rect.width = tool === TOOLS.RECT ? pos.x - rect.x : rect.height;
 
         rects.splice(rects.length - 1, 1, rect);
         setRects(rects.concat());
@@ -209,6 +218,7 @@ export default function StageComponent() {
 
         trRef.current?.nodes([]);
         setSelected(null);
+        document.body.style.cursor = "default";
       }
     };
 
@@ -250,10 +260,17 @@ export default function StageComponent() {
             }}
           ></Rect>
 
-          <Transformer ref={trRef} />
+          <Transformer
+            ref={trRef}
+            anchorCornerRadius={2}
+            anchorStroke={COLORS.PURPLE}
+            padding={3}
+            borderStroke={COLORS.PURPLE}
+          />
 
           {rects.map((rect) => (
             <Rect
+              id={rect.id}
               key={rect.id}
               // I know you are wondering what all this maths is about
               // But don't worry about it.
@@ -263,10 +280,12 @@ export default function StageComponent() {
               y={Math.min(rect.y, rect.y + rect.height)}
               height={Math.abs(rect.height)}
               width={Math.abs(rect.width)}
+              rotation={rect.rotate}
               cornerRadius={10}
               stroke={rect.color}
               strokeWidth={2}
               strokeScaleEnabled={false}
+              hitStrokeWidth={15}
               onClick={handleSelect}
               onMouseOver={handleMouseOver}
               onMouseOut={handleMouseOut}
@@ -288,6 +307,7 @@ export default function StageComponent() {
 
           {circles.map((circle) => (
             <Circle
+              id={circle.id}
               key={circle.id}
               x={circle.x}
               y={circle.y}
@@ -295,6 +315,7 @@ export default function StageComponent() {
               stroke={circle.color}
               strokeWidth={2}
               strokeScaleEnabled={false}
+              hitStrokeWidth={15}
               onClick={handleSelect}
               onMouseOver={handleMouseOver}
               onMouseOut={handleMouseOut}
@@ -304,11 +325,13 @@ export default function StageComponent() {
 
           {lines.map((line) => (
             <Line
+              id={line.id}
               key={line.id}
               points={line.points}
               stroke={line.color}
               strokeWidth={2}
               strokeScaleEnabled={false}
+              hitStrokeWidth={15}
               lineCap={"round"}
               onClick={handleSelect}
               onMouseOver={handleMouseOver}
@@ -319,11 +342,13 @@ export default function StageComponent() {
 
           {arrows.map((arrow) => (
             <Arrow
+              id={arrow.id}
               key={arrow.id}
               points={arrow.points}
               stroke={arrow.color}
               strokeWidth={2}
               strokeScaleEnabled={false}
+              hitStrokeWidth={15}
               pointerWidth={5}
               lineCap={"round"}
               onClick={handleSelect}

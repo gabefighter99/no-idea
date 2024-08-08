@@ -28,6 +28,7 @@ export type RectType = {
   y: number;
   height: number;
   width: number;
+  rotate: number;
   color: string;
 };
 

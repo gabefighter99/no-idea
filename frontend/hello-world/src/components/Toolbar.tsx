@@ -5,6 +5,7 @@ import {
   PiTextAa,
   PiDownload,
 } from "react-icons/pi";
+import { BsDiamond } from "react-icons/bs";
 import { IoRemoveOutline, IoSquareOutline } from "react-icons/io5";
 import { HiArrowLongRight } from "react-icons/hi2";
 import Konva from "konva";
@@ -55,14 +56,12 @@ const Toolbar = ({ trRef, tool, setTool, color, setColor }: ToolbarProps) => {
       >
         <PiCircle size={iconSize} />
       </Button>
-      {/*
       <Button
         $set={tool === TOOLS.DIAMOND} // this can be just a Rect with 45 degree rotation
         onClick={() => handleSelectTool(TOOLS.DIAMOND)}
       >
-        <PiDiamond size={iconSize} />
+        <BsDiamond size={iconSize} />
       </Button>
-      */}
       <Button
         $set={tool === TOOLS.ARROW}
         onClick={() => handleSelectTool(TOOLS.ARROW)}
