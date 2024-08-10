@@ -40,15 +40,14 @@ export const ColorButton = styled.button<{ $set?: boolean; $color?: string }>`
 `;
 
 export const EditableDiv = styled.div`
-  width: max-content;
+  width: fit-content;
   line-height: 1;
   // textAlign: center;
-  padding: 5px;
   margin: 0px;
   background: none;
   outline: none;
   resize: none;
-  overflow: hidden;
+  overflow-x: visible;
   font-family: Indie Flower;
   font-weight: bold;
   white-space: pre-wrap;

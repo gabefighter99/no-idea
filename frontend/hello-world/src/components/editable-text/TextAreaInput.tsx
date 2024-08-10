@@ -83,7 +83,9 @@ const TextAreaInput = ({
   return (
     <Html
       groupProps={{ x: text.x, y: text.y }}
-      divProps={{ style: { opacity: 1 } }}
+      divProps={{
+        style: { fontSize: text.fontSize, color: text.color },
+      }}
     >
       <EditableDiv
         contentEditable
@@ -93,12 +95,6 @@ const TextAreaInput = ({
         onKeyDown={handleKeyDown}
         onMouseOver={handleMouseOver}
         onMouseOut={handleMouseOut}
-        style={{
-          left: text.x,
-          top: text.y,
-          fontSize: text.fontSize,
-          color: text.color,
-        }}
         suppressContentEditableWarning
       >
         {text.text}
