@@ -62,32 +62,53 @@ const TextAreaInput = ({
     if (!textRef.current) return;
 
     const newText = textRef.current.innerText;
-    const newHeight = textRef.current.offsetHeight;
-    const newWidth = textRef.current.offsetWidth;
 
-    setTexts((prevTexts) => {
-      let idx = prevTexts.findIndex((cand) => cand.id === text.id);
-      prevTexts.splice(idx, 1, {
-        ...text,
-        height: newHeight,
-        width: newWidth,
-        text: newText,
-        typing: false,
+    // textRef.current.offsetWidth is weird. See commit summary for explanation.
+    // I'm forced to do the following
+
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+    if (context) {
+      context.font = `bold ${text.fontSize}px Indie Flower`;
+
+      const lines = textRef.current.innerText.split("\n");
+      let maxWidth = 0;
+
+      lines.forEach((line) => {
+        const lineWidth = context.measureText(line).width;
+        if (lineWidth > maxWidth) {
+          maxWidth = lineWidth;
+        }
       });
-      return prevTexts.concat();
-    });
-    action.current = ACTION.NONE;
-    setTool(TOOLS.HAND);
+
+      const newHeight = textRef.current.offsetHeight;
+      const newWidth = maxWidth;
+
+      setTexts((prevTexts) => {
+        let idx = prevTexts.findIndex((cand) => cand.id === text.id);
+        prevTexts.splice(idx, 1, {
+          ...text,
+          height: newHeight,
+          width: newWidth,
+          text: newText,
+          typing: false,
+        });
+        return prevTexts.concat();
+      });
+      action.current = ACTION.NONE;
+      setTool(TOOLS.HAND);
+    }
   };
 
   return (
     <Html
       groupProps={{ x: text.x, y: text.y }}
       divProps={{
-        style: { fontSize: text.fontSize, color: text.color },
+        style: { color: text.color },
       }}
     >
       <EditableDiv
+        $fontSize={text.fontSize}
         contentEditable
         ref={textRef}
         id={text.id}

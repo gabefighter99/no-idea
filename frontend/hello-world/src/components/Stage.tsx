@@ -169,6 +169,8 @@ export default function StageComponent() {
         pos.y <= text.y + text.height,
     );
 
+    // problem here with rotation. If we rotate, we can't find this properly
+    // Also when we do find it, the editable div resets to horizontal orientation
     if (existing) {
       setTexts((prevTexts) => {
         let idx = prevTexts.findIndex((cand) => cand.id === existing.id);

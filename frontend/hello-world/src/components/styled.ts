@@ -39,15 +39,17 @@ export const ColorButton = styled.button<{ $set?: boolean; $color?: string }>`
   margin: 5px 3px 0px;
 `;
 
-export const EditableDiv = styled.div`
+export const EditableDiv = styled.div<{ $fontSize?: number }>`
   width: fit-content;
   line-height: 1;
   // textAlign: center;
+  // padding: 0px 10px 0px 0px;
   margin: 0px;
   background: none;
   outline: none;
   resize: none;
   overflow-x: visible;
+  font-size: ${(props) => props.$fontSize}px;
   font-family: Indie Flower;
   font-weight: bold;
   white-space: pre-wrap;
