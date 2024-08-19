@@ -21,6 +21,7 @@ import {
 import Toolbar from "./Toolbar";
 import EditableText from "./editable-text/EditableText";
 import { handleMouseOut, handleMouseOver } from "./eventHandlers";
+import { Html } from "react-konva-utils";
 
 export default function StageComponent() {
   const stageRef = useRef<Konva.Stage>(null);
@@ -231,147 +232,155 @@ export default function StageComponent() {
   }, [selected, rects, circles, lines, arrows, texts]);
 
   return (
-    <div>
-      <Toolbar
-        trRef={trRef}
-        tool={tool}
-        setTool={setTool}
-        color={color}
-        setColor={setColor}
-      />
-      <Stage
-        ref={stageRef}
-        width={window.innerWidth}
-        height={window.innerHeight}
-        onPointerDown={handlePtrDown}
-        onDblClick={handleDblTapClick}
-        onDblTap={handleDblTapClick}
-        onPointerUp={handlePtrUp}
-        onPointerMove={handlePtrMove}
-      >
-        <Layer>
-          <Rect
-            x={0}
-            y={0}
-            width={window.innerWidth}
-            height={window.innerHeight}
-            fill={bgCol}
-            onClick={() => {
-              setSelected(null);
-              trRef.current?.nodes([]);
-            }}
-          ></Rect>
-
-          <Transformer
-            ref={trRef}
-            anchorCornerRadius={2}
-            anchorStroke={COLORS.PURPLE}
-            padding={3}
-            borderStroke={COLORS.PURPLE}
+    <Stage
+      ref={stageRef}
+      width={window.innerWidth}
+      height={window.innerHeight}
+      onPointerDown={handlePtrDown}
+      onDblClick={handleDblTapClick}
+      onDblTap={handleDblTapClick}
+      onPointerUp={handlePtrUp}
+      onPointerMove={handlePtrMove}
+    >
+      <Layer>
+        <Html
+          divProps={{
+            style: {
+              left: "50%",
+              transform: "translateX(-50%)",
+              marginTop: "15px",
+            },
+          }}
+        >
+          <Toolbar
+            trRef={trRef}
+            tool={tool}
+            setTool={setTool}
+            color={color}
+            setColor={setColor}
           />
+        </Html>
+        <Rect
+          x={0}
+          y={0}
+          width={window.innerWidth}
+          height={window.innerHeight}
+          fill={bgCol}
+          onClick={() => {
+            setSelected(null);
+            trRef.current?.nodes([]);
+          }}
+        ></Rect>
 
-          {rects.map((rect) => (
-            <Rect
-              id={rect.id}
-              key={rect.id}
-              // I know you are wondering what all this maths is about
-              // But don't worry about it.
-              // Trust.
-              // I'm a genius.
-              x={Math.min(rect.x, rect.x + rect.width)}
-              y={Math.min(rect.y, rect.y + rect.height)}
-              height={Math.abs(rect.height)}
-              width={Math.abs(rect.width)}
-              rotation={rect.rotate}
-              cornerRadius={10}
-              stroke={rect.color}
-              strokeWidth={2}
-              strokeScaleEnabled={false}
-              hitStrokeWidth={15}
-              onClick={handleSelect}
-              onMouseOver={handleMouseOver}
-              onMouseOut={handleMouseOut}
-              draggable={isDraggable}
-              // onDragEnd={(e: Konva.KonvaEventObject<DragEvent>) => {
-              //   const { x, y } = e.target.attrs;
-              //   setRects((prevs) => {
-              //     const idx = prevs.findIndex((cand) => cand.id === rect.id);
-              //     prevs.splice(idx, 1, {
-              //       ...rect,
-              //       x,
-              //       y,
-              //     });
-              //     return prevs.concat();
-              //   });
-              // }}
-            />
-          ))}
+        <Transformer
+          ref={trRef}
+          anchorCornerRadius={2}
+          anchorStroke={COLORS.PURPLE}
+          padding={3}
+          borderStroke={COLORS.PURPLE}
+        />
 
-          {circles.map((circle) => (
-            <Circle
-              id={circle.id}
-              key={circle.id}
-              x={circle.x}
-              y={circle.y}
-              radius={circle.radius}
-              stroke={circle.color}
-              strokeWidth={2}
-              strokeScaleEnabled={false}
-              hitStrokeWidth={15}
-              onClick={handleSelect}
-              onMouseOver={handleMouseOver}
-              onMouseOut={handleMouseOut}
-              draggable={isDraggable}
-            />
-          ))}
+        {rects.map((rect) => (
+          <Rect
+            id={rect.id}
+            key={rect.id}
+            // I know you are wondering what all this maths is about
+            // But don't worry about it.
+            // Trust.
+            // I'm a genius.
+            x={Math.min(rect.x, rect.x + rect.width)}
+            y={Math.min(rect.y, rect.y + rect.height)}
+            height={Math.abs(rect.height)}
+            width={Math.abs(rect.width)}
+            rotation={rect.rotate}
+            cornerRadius={10}
+            stroke={rect.color}
+            strokeWidth={2}
+            strokeScaleEnabled={false}
+            hitStrokeWidth={15}
+            onClick={handleSelect}
+            onMouseOver={handleMouseOver}
+            onMouseOut={handleMouseOut}
+            draggable={isDraggable}
+            // onDragEnd={(e: Konva.KonvaEventObject<DragEvent>) => {
+            //   const { x, y } = e.target.attrs;
+            //   setRects((prevs) => {
+            //     const idx = prevs.findIndex((cand) => cand.id === rect.id);
+            //     prevs.splice(idx, 1, {
+            //       ...rect,
+            //       x,
+            //       y,
+            //     });
+            //     return prevs.concat();
+            //   });
+            // }}
+          />
+        ))}
 
-          {lines.map((line) => (
-            <Line
-              id={line.id}
-              key={line.id}
-              points={line.points}
-              stroke={line.color}
-              strokeWidth={2}
-              strokeScaleEnabled={false}
-              hitStrokeWidth={15}
-              lineCap={"round"}
-              onClick={handleSelect}
-              onMouseOver={handleMouseOver}
-              onMouseOut={handleMouseOut}
-              draggable={isDraggable}
-            />
-          ))}
+        {circles.map((circle) => (
+          <Circle
+            id={circle.id}
+            key={circle.id}
+            x={circle.x}
+            y={circle.y}
+            radius={circle.radius}
+            stroke={circle.color}
+            strokeWidth={2}
+            strokeScaleEnabled={false}
+            hitStrokeWidth={15}
+            onClick={handleSelect}
+            onMouseOver={handleMouseOver}
+            onMouseOut={handleMouseOut}
+            draggable={isDraggable}
+          />
+        ))}
 
-          {arrows.map((arrow) => (
-            <Arrow
-              id={arrow.id}
-              key={arrow.id}
-              points={arrow.points}
-              stroke={arrow.color}
-              strokeWidth={2}
-              strokeScaleEnabled={false}
-              hitStrokeWidth={15}
-              pointerWidth={5}
-              lineCap={"round"}
-              onClick={handleSelect}
-              onMouseOver={handleMouseOver}
-              onMouseOut={handleMouseOut}
-              draggable={isDraggable}
-            />
-          ))}
+        {lines.map((line) => (
+          <Line
+            id={line.id}
+            key={line.id}
+            points={line.points}
+            stroke={line.color}
+            strokeWidth={2}
+            strokeScaleEnabled={false}
+            hitStrokeWidth={15}
+            lineCap={"round"}
+            onClick={handleSelect}
+            onMouseOver={handleMouseOver}
+            onMouseOut={handleMouseOut}
+            draggable={isDraggable}
+          />
+        ))}
 
-          {texts.map((text) => (
-            <EditableText
-              key={text.id}
-              text={text}
-              action={action}
-              handleSelect={handleSelect}
-              setTexts={setTexts}
-              setTool={setTool}
-            />
-          ))}
-        </Layer>
-      </Stage>
-    </div>
+        {arrows.map((arrow) => (
+          <Arrow
+            id={arrow.id}
+            key={arrow.id}
+            points={arrow.points}
+            stroke={arrow.color}
+            strokeWidth={2}
+            strokeScaleEnabled={false}
+            hitStrokeWidth={15}
+            pointerWidth={5}
+            lineCap={"round"}
+            onClick={handleSelect}
+            onMouseOver={handleMouseOver}
+            onMouseOut={handleMouseOut}
+            draggable={isDraggable}
+          />
+        ))}
+
+        {texts.map((text) => (
+          <EditableText
+            key={text.id}
+            text={text}
+            action={action}
+            handleSelect={handleSelect}
+            setTexts={setTexts}
+            setTool={setTool}
+          />
+        ))}
+      </Layer>
+    </Stage>
   );
 }

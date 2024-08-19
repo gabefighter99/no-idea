@@ -1,15 +1,13 @@
 import styled from "styled-components";
 
 export const ToolbarDiv = styled.div`
+  background-color: rgb(255, 255, 255, 1);
   border: 1px solid #e6e6e6;
   border-radius: 10px;
   box-shadow:
     0 1px 2px 0 rgba(0, 0, 0, 0.02),
     0 -1px 2px 0 rgba(0, 0, 0, 0.02);
-  margin-inline: auto;
   width: fit-content;
-  margin-top: 15px;
-  margin-bottom: 15px;
   display: flex;
   justify-content: center;
   padding: 5px;
@@ -43,7 +41,6 @@ export const EditableDiv = styled.div<{ $fontSize?: number }>`
   width: fit-content;
   line-height: 1;
   // textAlign: center;
-  // padding: 0px 10px 0px 0px;
   margin: 0px;
   background: none;
   outline: none;
