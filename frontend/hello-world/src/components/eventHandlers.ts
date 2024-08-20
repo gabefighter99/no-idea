@@ -1,5 +1,5 @@
-const handleMouseOver = () => {
-  document.body.style.cursor = "move";
+const handleMouseOver = (cursor: string) => {
+  document.body.style.cursor = cursor;
 };
 
 const handleMouseOut = () => {

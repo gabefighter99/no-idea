@@ -114,7 +114,7 @@ const TextAreaInput = ({
         id={text.id}
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
-        onMouseOver={handleMouseOver}
+        onMouseOver={() => handleMouseOver("text")}
         onMouseOut={handleMouseOut}
         suppressContentEditableWarning
       >

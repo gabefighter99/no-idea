@@ -13,23 +13,29 @@ import { COLORS, TOOLS } from "./constants";
 import { Button, ColorButton, ToolbarDiv } from "./styled";
 
 type ToolbarProps = {
-  trRef: React.RefObject<Konva.Transformer>;
   tool: string;
   setTool: (value: React.SetStateAction<string>) => void;
   color: string;
   setColor: (value: React.SetStateAction<string>) => void;
+  setSelected: (value: React.SetStateAction<Konva.Node | null>) => void;
 };
 
-const Toolbar = ({ trRef, tool, setTool, color, setColor }: ToolbarProps) => {
+const Toolbar = ({
+  tool,
+  setTool,
+  color,
+  setColor,
+  setSelected,
+}: ToolbarProps) => {
   const iconSize = "1.7em";
   const handleSelectTool = (selectedTool: string) => {
     // Deselect transformer
-    trRef.current?.nodes([]);
+    setSelected(null);
     setTool(selectedTool);
   };
 
   const handleColorChange = (selectedColor: string) => {
-    trRef.current?.nodes([]);
+    setSelected(null);
     setColor(selectedColor);
   };
 
@@ -57,7 +63,7 @@ const Toolbar = ({ trRef, tool, setTool, color, setColor }: ToolbarProps) => {
         <PiCircle size={iconSize} />
       </Button>
       <Button
-        $set={tool === TOOLS.DIAMOND} // this can be just a Rect with 45 degree rotation
+        $set={tool === TOOLS.DIAMOND}
         onClick={() => handleSelectTool(TOOLS.DIAMOND)}
       >
         <BsDiamond size={iconSize} />

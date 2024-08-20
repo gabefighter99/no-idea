@@ -20,6 +20,7 @@ export const COLORS = {
   RUBY: "#e53f71",
   PURPLE: "#6a5acd",
   BLACK: "#000000",
+  WHITE: "#ffffff",
 };
 
 export type RectType = {
@@ -42,6 +43,7 @@ export type CircleType = {
 
 export type LineType = {
   id: string;
+  isArrow: boolean;
   points: number[];
   color: string;
 };

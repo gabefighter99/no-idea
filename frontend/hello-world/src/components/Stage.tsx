@@ -6,6 +6,7 @@ import {
   Arrow,
   Circle,
   Transformer,
+  Group,
 } from "react-konva";
 import { useEffect, useRef, useState } from "react";
 import Konva from "konva";
@@ -20,8 +21,9 @@ import {
 } from "./constants";
 import Toolbar from "./Toolbar";
 import EditableText from "./editable-text/EditableText";
-import { handleMouseOut, handleMouseOver } from "./eventHandlers";
 import { Html } from "react-konva-utils";
+import LineArrow from "./shapes/LineArrow";
+import { handleMouseOut, handleMouseOver } from "./eventHandlers";
 
 export default function StageComponent() {
   const stageRef = useRef<Konva.Stage>(null);
@@ -32,13 +34,24 @@ export default function StageComponent() {
   const [color, setColor] = useState("#000000");
   const [selected, setSelected] = useState<Konva.Node | null>(null);
 
+  useEffect(() => {
+    if (!selected) {
+      trRef.current?.nodes([]);
+      document.body.style.cursor = "default";
+    } else if (
+      selected.getClassName() !== "Line" &&
+      selected.getClassName() !== "Arrow"
+    ) {
+      trRef.current?.nodes([selected]);
+    }
+  }, [selected]);
+
   const action = useRef(ACTION.NONE);
-  const isDraggable = tool === TOOLS.HAND;
+  const isDraggable = tool === TOOLS.HAND && selected !== null;
 
   const [rects, setRects] = useState<RectType[]>([]);
   const [circles, setCircles] = useState<CircleType[]>([]);
   const [lines, setLines] = useState<LineType[]>([]);
-  const [arrows, setArrows] = useState<LineType[]>([]);
   const [texts, setTexts] = useState<TextType[]>([]);
 
   const handlePtrDown = () => {
@@ -72,10 +85,11 @@ export default function StageComponent() {
         break;
       case TOOLS.LINE:
       case TOOLS.SCRIBBLE:
-        setLines([...lines, { id, points: [pos.x, pos.y], color }]);
-        break;
       case TOOLS.ARROW:
-        setArrows([...arrows, { id, points: [pos.x, pos.y], color }]);
+        setLines([
+          ...lines,
+          { id, isArrow: tool === TOOLS.ARROW, points: [pos.x, pos.y], color },
+        ]);
         break;
       default:
         break;
@@ -124,18 +138,12 @@ export default function StageComponent() {
         setLines(lines.concat());
         break;
       case TOOLS.LINE:
+      case TOOLS.ARROW:
         let line = lines[lines.length - 1];
         line.points = [line.points[0], line.points[1], pos.x, pos.y];
 
         lines.splice(lines.length - 1, 1, line);
         setLines(lines.concat());
-        break;
-      case TOOLS.ARROW:
-        let arrow = arrows[arrows.length - 1];
-        arrow.points = [arrow.points[0], arrow.points[1], pos.x, pos.y];
-
-        arrows.splice(arrows.length - 1, 1, arrow);
-        setArrows(arrows.concat());
         break;
       default:
         break;
@@ -145,17 +153,14 @@ export default function StageComponent() {
   const handleSelect = (e: Konva.KonvaEventObject<MouseEvent>) => {
     if (tool !== TOOLS.HAND) return;
 
-    const target = e.currentTarget;
-    trRef.current?.nodes([target]);
-    setSelected(target as Konva.Node);
+    trRef.current?.nodes([]);
+    setSelected(e.currentTarget);
   };
 
   const handleDblTapClick = () => {
     if (!stageRef.current) return;
 
-    trRef.current?.nodes([]);
     setSelected(null);
-
     action.current = ACTION.TYPING;
     const stage = stageRef.current;
     const pos = stage.getPointerPosition();
@@ -216,12 +221,8 @@ export default function StageComponent() {
         setRects(rects.filter((rect) => rect.id !== nodeId));
         setCircles(circles.filter((circle) => circle.id !== nodeId));
         setLines(lines.filter((line) => line.id !== nodeId));
-        setArrows(arrows.filter((arrow) => arrow.id !== nodeId));
         setTexts(texts.filter((text) => text.id !== nodeId));
-
-        trRef.current?.nodes([]);
         setSelected(null);
-        document.body.style.cursor = "default";
       }
     };
 
@@ -229,7 +230,7 @@ export default function StageComponent() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [selected, rects, circles, lines, arrows, texts]);
+  }, [selected, rects, circles, lines, texts]);
 
   return (
     <Stage
@@ -253,11 +254,11 @@ export default function StageComponent() {
           }}
         >
           <Toolbar
-            trRef={trRef}
             tool={tool}
             setTool={setTool}
             color={color}
             setColor={setColor}
+            setSelected={setSelected}
           />
         </Html>
         <Rect
@@ -268,15 +269,15 @@ export default function StageComponent() {
           fill={bgCol}
           onClick={() => {
             setSelected(null);
-            trRef.current?.nodes([]);
           }}
         ></Rect>
 
         <Transformer
           ref={trRef}
+          rotateEnabled={false}
           anchorCornerRadius={2}
           anchorStroke={COLORS.PURPLE}
-          padding={3}
+          padding={8}
           borderStroke={COLORS.PURPLE}
         />
 
@@ -299,21 +300,9 @@ export default function StageComponent() {
             strokeScaleEnabled={false}
             hitStrokeWidth={15}
             onClick={handleSelect}
-            onMouseOver={handleMouseOver}
+            onMouseOver={() => handleMouseOver("move")}
             onMouseOut={handleMouseOut}
             draggable={isDraggable}
-            // onDragEnd={(e: Konva.KonvaEventObject<DragEvent>) => {
-            //   const { x, y } = e.target.attrs;
-            //   setRects((prevs) => {
-            //     const idx = prevs.findIndex((cand) => cand.id === rect.id);
-            //     prevs.splice(idx, 1, {
-            //       ...rect,
-            //       x,
-            //       y,
-            //     });
-            //     return prevs.concat();
-            //   });
-            // }}
           />
         ))}
 
@@ -329,44 +318,20 @@ export default function StageComponent() {
             strokeScaleEnabled={false}
             hitStrokeWidth={15}
             onClick={handleSelect}
-            onMouseOver={handleMouseOver}
+            onMouseOver={() => handleMouseOver("move")}
             onMouseOut={handleMouseOut}
             draggable={isDraggable}
           />
         ))}
 
         {lines.map((line) => (
-          <Line
-            id={line.id}
+          <LineArrow
             key={line.id}
-            points={line.points}
-            stroke={line.color}
-            strokeWidth={2}
-            strokeScaleEnabled={false}
-            hitStrokeWidth={15}
-            lineCap={"round"}
-            onClick={handleSelect}
-            onMouseOver={handleMouseOver}
-            onMouseOut={handleMouseOut}
-            draggable={isDraggable}
-          />
-        ))}
-
-        {arrows.map((arrow) => (
-          <Arrow
-            id={arrow.id}
-            key={arrow.id}
-            points={arrow.points}
-            stroke={arrow.color}
-            strokeWidth={2}
-            strokeScaleEnabled={false}
-            hitStrokeWidth={15}
-            pointerWidth={5}
-            lineCap={"round"}
-            onClick={handleSelect}
-            onMouseOver={handleMouseOver}
-            onMouseOut={handleMouseOut}
-            draggable={isDraggable}
+            line={line}
+            isDraggable={isDraggable}
+            setLines={setLines}
+            selected={selected}
+            handleSelect={handleSelect}
           />
         ))}
 
@@ -375,6 +340,7 @@ export default function StageComponent() {
             key={text.id}
             text={text}
             action={action}
+            isDraggable={isDraggable}
             handleSelect={handleSelect}
             setTexts={setTexts}
             setTool={setTool}

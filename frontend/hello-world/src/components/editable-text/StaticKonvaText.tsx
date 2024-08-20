@@ -6,12 +6,14 @@ import { handleMouseOut, handleMouseOver } from "../eventHandlers";
 
 type StaticKonvaTextProps = {
   text: TextType;
+  isDraggable: boolean;
   handleSelect: (e: Konva.KonvaEventObject<MouseEvent>) => void;
   setTexts: React.Dispatch<React.SetStateAction<TextType[]>>;
 };
 
 const StaticKonvaText = ({
   text,
+  isDraggable,
   handleSelect,
   setTexts,
 }: StaticKonvaTextProps) => {
@@ -31,7 +33,7 @@ const StaticKonvaText = ({
       fontSize={text.fontSize}
       fontStyle={"bold"}
       onClick={handleSelect}
-      onMouseOver={handleMouseOver}
+      onMouseOver={() => handleMouseOver("move")}
       onMouseOut={handleMouseOut}
       onTransformEnd={() => {
         if (!textRef.current) return;
@@ -58,7 +60,7 @@ const StaticKonvaText = ({
           return prevs.concat();
         });
       }}
-      draggable
+      draggable={isDraggable}
       onDragEnd={(e: Konva.KonvaEventObject<DragEvent>) => {
         const { x, y } = e.target.attrs;
         setTexts((prevs) => {

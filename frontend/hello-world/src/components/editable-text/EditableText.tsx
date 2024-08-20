@@ -6,6 +6,7 @@ import Konva from "konva";
 type EditableTextProps = {
   text: TextType;
   action: React.MutableRefObject<string>;
+  isDraggable: boolean;
   handleSelect: (e: Konva.KonvaEventObject<MouseEvent>) => void;
   setTexts: React.Dispatch<React.SetStateAction<TextType[]>>;
   setTool: React.Dispatch<React.SetStateAction<string>>;
@@ -22,6 +23,7 @@ type EditableTextProps = {
 const EditableText = ({
   text,
   action,
+  isDraggable,
   handleSelect,
   setTexts,
   setTool,
@@ -36,6 +38,7 @@ const EditableText = ({
   ) : (
     <StaticKonvaText
       text={text}
+      isDraggable={isDraggable}
       handleSelect={handleSelect}
       setTexts={setTexts}
     />
