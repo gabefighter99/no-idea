@@ -15,11 +15,6 @@ type EditableTextProps = {
 // Toggle between editable TextAreaInput and Static Konva-displayable,
 // resizeable and draggable StaticKonvaText components depending on whether
 // we're editing or not.
-
-// Problems left:
-// Resizing. When we resize, we need to update height/width and then when
-// typing we need to match a new font size
-
 const EditableText = ({
   text,
   action,

@@ -159,20 +159,13 @@ export default function StageComponent() {
 
     if (!pos) return;
 
-    const existing = texts.find(
-      (text) =>
-        pos.x >= text.x &&
-        pos.x <= text.x + text.width &&
-        pos.y >= text.y &&
-        pos.y <= text.y + text.height,
-    );
+    const existing = stage.getIntersection(pos);
 
-    // problem here with rotation. If we rotate, we can't find this properly
-    // Also when we do find it, the editable div resets to horizontal orientation
-    if (existing) {
+    if (existing && existing.name() === "Text") {
       setTexts((prevTexts) => {
-        let idx = prevTexts.findIndex((cand) => cand.id === existing.id);
-        prevTexts.splice(idx, 1, { ...existing, typing: true });
+        let idx = prevTexts.findIndex((cand) => cand.id === existing.id());
+        const prev = prevTexts[idx];
+        prevTexts.splice(idx, 1, { ...prev, typing: true });
         return [...prevTexts];
       });
     } else {
@@ -184,7 +177,7 @@ export default function StageComponent() {
           id,
           x: pos.x,
           y: pos.y,
-          text: "Text",
+          text: " ",
           fontSize: 16,
           typing: true,
           color,
