@@ -82,7 +82,7 @@ const TextAreaInput = ({
       });
 
       const newHeight = textRef.current.offsetHeight;
-      const newWidth = maxWidth;
+      const newWidth = maxWidth + 1;
 
       setTexts((prevTexts) => {
         let idx = prevTexts.findIndex((cand) => cand.id === text.id);

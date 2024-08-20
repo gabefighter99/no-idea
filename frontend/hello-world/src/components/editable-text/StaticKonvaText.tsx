@@ -22,6 +22,7 @@ const StaticKonvaText = ({
     <Text
       id={text.id}
       key={text.id}
+      name={"Text"}
       ref={textRef}
       x={text.x}
       y={text.y}
@@ -61,6 +62,7 @@ const StaticKonvaText = ({
         });
       }}
       draggable={isDraggable}
+      onDragStart={handleSelect}
       onDragEnd={(e: Konva.KonvaEventObject<DragEvent>) => {
         const { x, y } = e.target.attrs;
         setTexts((prevs) => {

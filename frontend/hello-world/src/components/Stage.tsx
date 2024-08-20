@@ -1,13 +1,4 @@
-import {
-  Stage,
-  Layer,
-  Rect,
-  Line,
-  Arrow,
-  Circle,
-  Transformer,
-  Group,
-} from "react-konva";
+import { Stage, Layer, Rect, Circle, Transformer, Line } from "react-konva";
 import { useEffect, useRef, useState } from "react";
 import Konva from "konva";
 import {
@@ -35,23 +26,21 @@ export default function StageComponent() {
   const [selected, setSelected] = useState<Konva.Node | null>(null);
 
   useEffect(() => {
+    trRef.current?.nodes([]);
     if (!selected) {
-      trRef.current?.nodes([]);
       document.body.style.cursor = "default";
-    } else if (
-      selected.getClassName() !== "Line" &&
-      selected.getClassName() !== "Arrow"
-    ) {
+    } else if (selected.name() !== "LineArrow") {
       trRef.current?.nodes([selected]);
     }
   }, [selected]);
 
   const action = useRef(ACTION.NONE);
-  const isDraggable = tool === TOOLS.HAND && selected !== null;
+  const isDraggable = tool === TOOLS.HAND;
 
   const [rects, setRects] = useState<RectType[]>([]);
   const [circles, setCircles] = useState<CircleType[]>([]);
   const [lines, setLines] = useState<LineType[]>([]);
+  const [scribbles, setScribbles] = useState<LineType[]>([]);
   const [texts, setTexts] = useState<TextType[]>([]);
 
   const handlePtrDown = () => {
@@ -84,11 +73,16 @@ export default function StageComponent() {
         setCircles([...circles, { id, x: pos.x, y: pos.y, radius: 0, color }]);
         break;
       case TOOLS.LINE:
-      case TOOLS.SCRIBBLE:
       case TOOLS.ARROW:
         setLines([
           ...lines,
           { id, isArrow: tool === TOOLS.ARROW, points: [pos.x, pos.y], color },
+        ]);
+        break;
+      case TOOLS.SCRIBBLE:
+        setScribbles([
+          ...scribbles,
+          { id, isArrow: false, points: [pos.x, pos.y], color },
         ]);
         break;
       default:
@@ -131,11 +125,11 @@ export default function StageComponent() {
         setCircles(circles.concat());
         break;
       case TOOLS.SCRIBBLE:
-        let scribble = lines[lines.length - 1];
+        let scribble = scribbles[scribbles.length - 1];
         scribble.points = scribble.points.concat([pos.x, pos.y]);
 
-        lines.splice(lines.length - 1, 1, scribble);
-        setLines(lines.concat());
+        scribbles.splice(scribbles.length - 1, 1, scribble);
+        setScribbles(scribbles.concat());
         break;
       case TOOLS.LINE:
       case TOOLS.ARROW:
@@ -152,8 +146,6 @@ export default function StageComponent() {
 
   const handleSelect = (e: Konva.KonvaEventObject<MouseEvent>) => {
     if (tool !== TOOLS.HAND) return;
-
-    trRef.current?.nodes([]);
     setSelected(e.currentTarget);
   };
 
@@ -221,6 +213,7 @@ export default function StageComponent() {
         setRects(rects.filter((rect) => rect.id !== nodeId));
         setCircles(circles.filter((circle) => circle.id !== nodeId));
         setLines(lines.filter((line) => line.id !== nodeId));
+        setScribbles(scribbles.filter((scribble) => scribble.id !== nodeId));
         setTexts(texts.filter((text) => text.id !== nodeId));
         setSelected(null);
       }
@@ -274,7 +267,7 @@ export default function StageComponent() {
 
         <Transformer
           ref={trRef}
-          rotateEnabled={false}
+          rotateEnabled={selected?.name() === "Text"}
           anchorCornerRadius={2}
           anchorStroke={COLORS.PURPLE}
           padding={8}
@@ -285,6 +278,7 @@ export default function StageComponent() {
           <Rect
             id={rect.id}
             key={rect.id}
+            name={"Rect"}
             // I know you are wondering what all this maths is about
             // But don't worry about it.
             // Trust.
@@ -303,6 +297,7 @@ export default function StageComponent() {
             onMouseOver={() => handleMouseOver("move")}
             onMouseOut={handleMouseOut}
             draggable={isDraggable}
+            onDragStart={handleSelect}
           />
         ))}
 
@@ -310,6 +305,7 @@ export default function StageComponent() {
           <Circle
             id={circle.id}
             key={circle.id}
+            name={"Circle"}
             x={circle.x}
             y={circle.y}
             radius={circle.radius}
@@ -321,6 +317,7 @@ export default function StageComponent() {
             onMouseOver={() => handleMouseOver("move")}
             onMouseOut={handleMouseOut}
             draggable={isDraggable}
+            onDragStart={handleSelect}
           />
         ))}
 
@@ -332,6 +329,25 @@ export default function StageComponent() {
             setLines={setLines}
             selected={selected}
             handleSelect={handleSelect}
+          />
+        ))}
+
+        {scribbles.map((scribble) => (
+          <Line
+            id={scribble.id}
+            key={scribble.id}
+            name={"Scribble"}
+            points={scribble.points}
+            stroke={scribble.color}
+            strokeWidth={2}
+            strokeScaleEnabled={false}
+            hitStrokeWidth={15}
+            lineCap={"round"}
+            draggable={isDraggable}
+            onDragStart={handleSelect}
+            onClick={handleSelect}
+            onMouseOver={() => handleMouseOver("move")}
+            onMouseOut={handleMouseOut}
           />
         ))}
 

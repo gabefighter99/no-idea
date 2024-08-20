@@ -19,11 +19,18 @@ const LineArrow = ({
   handleSelect,
 }: LineArrowProps) => {
   return (
-    <Group key={line.id} draggable={isDraggable}>
+    <Group
+      id={line.id}
+      key={line.id}
+      name={"LineArrow"}
+      draggable={isDraggable}
+      onDragStart={handleSelect}
+    >
       {line.isArrow ? (
         <Arrow
           id={line.id}
           key={line.id}
+          name={"LineArrow"}
           points={line.points}
           stroke={line.color}
           strokeWidth={2}
@@ -34,12 +41,12 @@ const LineArrow = ({
           onClick={handleSelect}
           onMouseOver={() => handleMouseOver("move")}
           onMouseOut={handleMouseOut}
-          draggable={isDraggable}
         />
       ) : (
         <Line
           id={line.id}
           key={line.id}
+          name={"LineArrow"}
           points={line.points}
           stroke={line.color}
           strokeWidth={2}
