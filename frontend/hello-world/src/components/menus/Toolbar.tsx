@@ -9,14 +9,15 @@ import { BsDiamond } from "react-icons/bs";
 import { IoRemoveOutline, IoSquareOutline } from "react-icons/io5";
 import { HiArrowLongRight } from "react-icons/hi2";
 import Konva from "konva";
-import { COLORS, TOOLS } from "./constants";
-import { Button, ColorButton, ToolbarDiv } from "./styled";
+import { COLORS, TOOLS } from "../common/constants";
+import { Button, ColorButton, ToolbarDiv } from "../common/styled";
 
 type ToolbarProps = {
   tool: string;
   setTool: (value: React.SetStateAction<string>) => void;
   color: string;
   setColor: (value: React.SetStateAction<string>) => void;
+  isDark: boolean;
   setSelected: (value: React.SetStateAction<Konva.Node | null>) => void;
 };
 
@@ -25,6 +26,7 @@ const Toolbar = ({
   setTool,
   color,
   setColor,
+  isDark,
   setSelected,
 }: ToolbarProps) => {
   const iconSize = "1.7em";
@@ -40,57 +42,92 @@ const Toolbar = ({
   };
 
   return (
-    <ToolbarDiv>
-      <Button onClick={() => {}}>
-        <PiDownload size={iconSize} />
+    <ToolbarDiv $isDark={isDark}>
+      <Button $isDark={isDark} onClick={() => {}}>
+        <PiDownload
+          color={isDark ? COLORS.WHITE : COLORS.BLACK}
+          size={iconSize}
+        />
       </Button>
       <Button
+        $isDark={isDark}
         $set={tool === TOOLS.HAND}
         onClick={() => handleSelectTool(TOOLS.HAND)}
       >
-        <PiHandLight size={iconSize} />
+        <PiHandLight
+          color={isDark ? COLORS.WHITE : COLORS.BLACK}
+          size={iconSize}
+        />
       </Button>
       <Button
+        $isDark={isDark}
         $set={tool === TOOLS.RECT}
         onClick={() => handleSelectTool(TOOLS.RECT)}
       >
-        <IoSquareOutline size={iconSize} />
+        <IoSquareOutline
+          color={isDark ? COLORS.WHITE : COLORS.BLACK}
+          size={iconSize}
+        />
       </Button>
       <Button
+        $isDark={isDark}
         $set={tool === TOOLS.CIRCLE}
         onClick={() => handleSelectTool(TOOLS.CIRCLE)}
       >
-        <PiCircle size={iconSize} />
+        <PiCircle
+          color={isDark ? COLORS.WHITE : COLORS.BLACK}
+          size={iconSize}
+        />
       </Button>
       <Button
+        $isDark={isDark}
         $set={tool === TOOLS.DIAMOND}
         onClick={() => handleSelectTool(TOOLS.DIAMOND)}
       >
-        <BsDiamond size={iconSize} />
+        <BsDiamond
+          color={isDark ? COLORS.WHITE : COLORS.BLACK}
+          size={iconSize}
+        />
       </Button>
       <Button
+        $isDark={isDark}
         $set={tool === TOOLS.ARROW}
         onClick={() => handleSelectTool(TOOLS.ARROW)}
       >
-        <HiArrowLongRight size={iconSize} />
+        <HiArrowLongRight
+          color={isDark ? COLORS.WHITE : COLORS.BLACK}
+          size={iconSize}
+        />
       </Button>
       <Button
+        $isDark={isDark}
         $set={tool === TOOLS.LINE}
         onClick={() => handleSelectTool(TOOLS.LINE)}
       >
-        <IoRemoveOutline size={iconSize} />
+        <IoRemoveOutline
+          color={isDark ? COLORS.WHITE : COLORS.BLACK}
+          size={iconSize}
+        />
       </Button>
       <Button
+        $isDark={isDark}
         $set={tool === TOOLS.SCRIBBLE}
         onClick={() => handleSelectTool(TOOLS.SCRIBBLE)}
       >
-        <PiPaintBrush size={iconSize} />
+        <PiPaintBrush
+          color={isDark ? COLORS.WHITE : COLORS.BLACK}
+          size={iconSize}
+        />
       </Button>
       <Button
+        $isDark={isDark}
         $set={tool === TOOLS.TEXT}
         onClick={() => handleSelectTool(TOOLS.TEXT)}
       >
-        <PiTextAa size={iconSize} />
+        <PiTextAa
+          color={isDark ? COLORS.WHITE : COLORS.BLACK}
+          size={iconSize}
+        />
       </Button>
       <ColorButton
         $set={color === COLORS.CYAN}
@@ -107,10 +144,18 @@ const Toolbar = ({
         $color={COLORS.PURPLE}
         onClick={() => handleColorChange(COLORS.PURPLE)}
       />
-      <ColorButton
-        $set={color === COLORS.BLACK}
-        onClick={() => handleColorChange(COLORS.BLACK)}
-      />
+      {isDark ? (
+        <ColorButton
+          $set={color === COLORS.WHITE}
+          $color={COLORS.WHITE}
+          onClick={() => handleColorChange(COLORS.WHITE)}
+        />
+      ) : (
+        <ColorButton
+          $set={color === COLORS.BLACK}
+          onClick={() => handleColorChange(COLORS.BLACK)}
+        />
+      )}
     </ToolbarDiv>
   );
 };

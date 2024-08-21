@@ -1,4 +1,4 @@
-import { TextType } from "../constants";
+import { TextType } from "../common/constants";
 import TextAreaInput from "./TextAreaInput";
 import StaticKonvaText from "./StaticKonvaText";
 import Konva from "konva";

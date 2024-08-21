@@ -1,21 +1,23 @@
 import { Stage, Layer, Rect, Circle, Transformer, Line } from "react-konva";
 import { useEffect, useRef, useState } from "react";
 import Konva from "konva";
-import { TextType, ACTION, COLORS, TOOLS } from "./constants";
-import Toolbar from "./Toolbar";
+import { TextType, ACTION, COLORS, TOOLS } from "./common/constants";
+import Toolbar from "./menus/Toolbar";
 import EditableText from "./editable-text/EditableText";
 import { Html } from "react-konva-utils";
 import LineArrow from "./shapes/LineArrow";
-import { handleMouseOut, handleMouseOver } from "./eventHandlers";
+import { handleMouseOut, handleMouseOver } from "./common/eventHandlers";
 import useDrawingTool from "../hooks/useDrawingTool";
+import ToggleSwitch from "./menus/ToggleSwitch";
+import { applyToShapes } from "./common/utils";
 
 export default function StageComponent() {
   const stageRef = useRef<Konva.Stage>(null);
   const trRef = useRef<Konva.Transformer>(null);
 
   const [tool, setTool] = useState(TOOLS.HAND);
-  const [bgCol, setBgCol] = useState("#FFFFFF");
-  const [color, setColor] = useState("#000000");
+  const [isDark, setIsDark] = useState(false);
+  const [color, setColor] = useState(COLORS.BLACK);
   const [selected, setSelected] = useState<Konva.Node | null>(null);
 
   const action = useRef(ACTION.NONE);
@@ -96,6 +98,38 @@ export default function StageComponent() {
   }, [selected]);
 
   useEffect(() => {
+    if (isDark) {
+      applyToShapes(
+        setRects,
+        setCircles,
+        setLines,
+        setScribbles,
+        setTexts,
+        (shapes) =>
+          shapes.map((shape) => {
+            if (shape.color === COLORS.BLACK)
+              return { ...shape, color: COLORS.WHITE };
+            return shape;
+          }),
+      );
+    } else {
+      applyToShapes(
+        setRects,
+        setCircles,
+        setLines,
+        setScribbles,
+        setTexts,
+        (shapes) =>
+          shapes.map((shape) => {
+            if (shape.color === COLORS.WHITE)
+              return { ...shape, color: COLORS.BLACK };
+            return shape;
+          }),
+      );
+    }
+  }, [isDark]);
+
+  useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Backspace" && selected) {
         const nodeId = selected.id();
@@ -106,11 +140,14 @@ export default function StageComponent() {
         // Which I would do
         // But I don't care lol. I don't see anyone adding so many shapes that
         // this actually has some performance effect
-        setRects(rects.filter((rect) => rect.id !== nodeId));
-        setCircles(circles.filter((circle) => circle.id !== nodeId));
-        setLines(lines.filter((line) => line.id !== nodeId));
-        setScribbles(scribbles.filter((scribble) => scribble.id !== nodeId));
-        setTexts(texts.filter((text) => text.id !== nodeId));
+        applyToShapes(
+          setRects,
+          setCircles,
+          setLines,
+          setScribbles,
+          setTexts,
+          (shapes) => shapes.filter((shape) => shape.id !== nodeId),
+        );
         setSelected(null);
       }
     };
@@ -119,7 +156,7 @@ export default function StageComponent() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [selected, rects, circles, lines, texts]);
+  }, [selected]);
 
   return (
     <Stage
@@ -147,7 +184,22 @@ export default function StageComponent() {
             setTool={setTool}
             color={color}
             setColor={setColor}
+            isDark={isDark}
             setSelected={setSelected}
+          />
+        </Html>
+        <Html
+          divProps={{
+            style: {
+              left: "90%",
+              marginTop: "15px",
+            },
+          }}
+        >
+          <ToggleSwitch
+            setColor={setColor}
+            isDark={isDark}
+            setIsDark={setIsDark}
           />
         </Html>
         <Rect
@@ -155,7 +207,7 @@ export default function StageComponent() {
           y={0}
           width={window.innerWidth}
           height={window.innerHeight}
-          fill={bgCol}
+          fill={isDark ? COLORS.DARKPURPLE : COLORS.WHITE}
           onClick={() => {
             setSelected(null);
           }}

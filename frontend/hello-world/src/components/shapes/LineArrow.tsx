@@ -1,7 +1,7 @@
 import Konva from "konva";
 import { Arrow, Circle, Group, Line } from "react-konva";
-import { COLORS, LineType } from "../constants";
-import { handleMouseOut, handleMouseOver } from "../eventHandlers";
+import { COLORS, LineType } from "../common/constants";
+import { handleMouseOut, handleMouseOver } from "../common/eventHandlers";
 
 type LineArrowProps = {
   line: LineType;

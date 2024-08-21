@@ -6,7 +6,7 @@ import {
   LineType,
   RectType,
   TOOLS,
-} from "../components/constants";
+} from "../components/common/constants";
 
 function useDrawingTool(
   stageRef: React.RefObject<Konva.Stage>,

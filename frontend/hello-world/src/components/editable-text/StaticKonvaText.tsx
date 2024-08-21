@@ -1,8 +1,8 @@
 import Konva from "konva";
 import { useRef } from "react";
 import { Text } from "react-konva";
-import { TextType } from "../constants";
-import { handleMouseOut, handleMouseOver } from "../eventHandlers";
+import { TextType } from "../common/constants";
+import { handleMouseOut, handleMouseOver } from "../common/eventHandlers";
 
 type StaticKonvaTextProps = {
   text: TextType;

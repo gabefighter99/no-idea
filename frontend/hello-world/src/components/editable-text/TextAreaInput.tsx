@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "react";
 import { Html } from "react-konva-utils";
-import { ACTION, TextType, TOOLS } from "../constants";
-import { handleMouseOut, handleMouseOver } from "../eventHandlers";
-import { EditableDiv } from "../styled";
+import { ACTION, TextType, TOOLS } from "../common/constants";
+import { handleMouseOut, handleMouseOver } from "../common/eventHandlers";
+import { EditableDiv } from "../common/styled";
 
 type TextAreaInputProps = {
   text: TextType;

@@ -21,6 +21,12 @@ export const COLORS = {
   PURPLE: "#6a5acd",
   BLACK: "#000000",
   WHITE: "#ffffff",
+  DARKPURPLE: "#28283c",
+  GREY: "#cdcdcd",
+  LIGHTBLUE: "#82b7f7",
+  DARKBLUE: "#22303c",
+  LIGHTPURPLE: "#d5c1dc",
+  DISCORDBLUE: "#7289da",
 };
 
 export type RectType = {
