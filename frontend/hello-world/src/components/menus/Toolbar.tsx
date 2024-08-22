@@ -131,28 +131,33 @@ const Toolbar = ({
       </Button>
       <ColorButton
         $set={color === COLORS.CYAN}
+        $isDark={isDark}
         $color={COLORS.CYAN}
         onClick={() => handleColorChange(COLORS.CYAN)}
       />
       <ColorButton
         $set={color === COLORS.RUBY}
+        $isDark={isDark}
         $color={COLORS.RUBY}
         onClick={() => handleColorChange(COLORS.RUBY)}
       />
       <ColorButton
         $set={color === COLORS.PURPLE}
+        $isDark={isDark}
         $color={COLORS.PURPLE}
         onClick={() => handleColorChange(COLORS.PURPLE)}
       />
       {isDark ? (
         <ColorButton
           $set={color === COLORS.WHITE}
+          $isDark={isDark}
           $color={COLORS.WHITE}
           onClick={() => handleColorChange(COLORS.WHITE)}
         />
       ) : (
         <ColorButton
           $set={color === COLORS.BLACK}
+          $isDark={isDark}
           onClick={() => handleColorChange(COLORS.BLACK)}
         />
       )}

@@ -41,13 +41,22 @@ export const Button = styled.button<{ $set?: boolean; $isDark?: boolean }>`
   }
 `;
 
-export const ColorButton = styled.button<{ $set?: boolean; $color?: string }>`
+export const ColorButton = styled.button<{
+  $set?: boolean;
+  $isDark?: boolean;
+  $color?: string;
+}>`
   background-color: ${(props) => props.$color || COLORS.BLACK};
   background-clip: content-box, padding-box;
   border-color: ${COLORS.WHITE};
   height: 2em;
   width: 2em;
-  border: ${(props) => (props.$set ? "1px solid #000000" : "none")};
+  border: ${(props) =>
+    props.$set
+      ? props.$isDark
+        ? "1px solid #ffffff"
+        : "1px solid #000000"
+      : "none"};
   padding: 2px;
   border-radius: 10px;
   margin: 5px 3px 0px;

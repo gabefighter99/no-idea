@@ -4,16 +4,23 @@ import { COLORS } from "../common/constants";
 import { Input, Label, Switch, ToolbarDiv } from "../common/styled";
 
 type ToggleSwitchProps = {
+  color: string;
   setColor: (value: React.SetStateAction<string>) => void;
   isDark: boolean;
   setIsDark: (value: React.SetStateAction<boolean>) => void;
 };
 
-const ToggleSwitch = ({ setColor, isDark, setIsDark }: ToggleSwitchProps) => {
+const ToggleSwitch = ({
+  color,
+  setColor,
+  isDark,
+  setIsDark,
+}: ToggleSwitchProps) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.checked) {
+    if (e.target.checked && color === COLORS.BLACK) {
       setColor(COLORS.WHITE);
-    } else {
+    }
+    if (!e.target.checked && color === COLORS.WHITE) {
       setColor(COLORS.BLACK);
     }
     setIsDark(e.target.checked);

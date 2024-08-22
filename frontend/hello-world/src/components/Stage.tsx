@@ -197,6 +197,7 @@ export default function StageComponent() {
           }}
         >
           <ToggleSwitch
+            color={color}
             setColor={setColor}
             isDark={isDark}
             setIsDark={setIsDark}
