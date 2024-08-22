@@ -75,8 +75,14 @@ export const EditableDiv = styled.div<{ $fontSize?: number }>`
   overflow-x: visible;
   font-size: ${(props) => props.$fontSize}px;
   font-family: Indie Flower;
+  // Here is the problem. "Bold" doesn't exist for Indie Flower. Firefox does a weird?
+  // Though tbh I have no idea why Konva gets a different Bold from the one that this Div gets
   font-weight: bold;
   white-space: pre-wrap;
+  // For firefox:
+  // transform: translateY(-3px);
+  // -3 here comes from -(2 + Math.round(textNode.fontSize() / 20))
+  // There's also some font size difference I think, but no idea why
 `;
 
 export const Label = styled.label`
