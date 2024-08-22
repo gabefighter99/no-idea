@@ -1,5 +1,6 @@
 import { ChangeEvent } from "react";
 import { PiSun, PiMoon } from "react-icons/pi";
+import { Html } from "react-konva-utils";
 import { COLORS } from "../common/constants";
 import { Input, Label, Switch, ToolbarDiv } from "../common/styled";
 
@@ -27,22 +28,31 @@ const ToggleSwitch = ({
   };
 
   return (
-    <ToolbarDiv $isDark={isDark}>
-      <Label>
-        <PiSun
-          color={isDark ? COLORS.WHITE : COLORS.BLACK}
-          style={{ margin: "0 2px", padding: "0 6px 0 0" }}
-          size={"1.6em"}
-        />
-        <Input checked={isDark} type="checkbox" onChange={handleChange} />
-        <Switch />
-        <PiMoon
-          color={isDark ? COLORS.WHITE : COLORS.BLACK}
-          style={{ margin: "0 2px", padding: "0 0 0 6px" }}
-          size={"1.6em"}
-        />
-      </Label>
-    </ToolbarDiv>
+    <Html
+      divProps={{
+        style: {
+          left: "90%",
+          marginTop: "15px",
+        },
+      }}
+    >
+      <ToolbarDiv $isDark={isDark}>
+        <Label>
+          <PiSun
+            color={isDark ? COLORS.WHITE : COLORS.BLACK}
+            style={{ margin: "0 2px", padding: "0 6px 0 0" }}
+            size={"1.6em"}
+          />
+          <Input checked={isDark} type="checkbox" onChange={handleChange} />
+          <Switch />
+          <PiMoon
+            color={isDark ? COLORS.WHITE : COLORS.BLACK}
+            style={{ margin: "0 2px", padding: "0 0 0 6px" }}
+            size={"1.6em"}
+          />
+        </Label>
+      </ToolbarDiv>
+    </Html>
   );
 };
 

@@ -4,7 +4,6 @@ import Konva from "konva";
 import { TextType, ACTION, COLORS, TOOLS } from "./common/constants";
 import Toolbar from "./menus/Toolbar";
 import EditableText from "./editable-text/EditableText";
-import { Html } from "react-konva-utils";
 import LineArrow from "./shapes/LineArrow";
 import { handleMouseOut, handleMouseOver } from "./common/eventHandlers";
 import useDrawingTool from "../hooks/useDrawingTool";
@@ -170,39 +169,20 @@ export default function StageComponent() {
       onPointerMove={handlePtrMove}
     >
       <Layer>
-        <Html
-          divProps={{
-            style: {
-              left: "50%",
-              transform: "translateX(-50%)",
-              marginTop: "15px",
-            },
-          }}
-        >
-          <Toolbar
-            tool={tool}
-            setTool={setTool}
-            color={color}
-            setColor={setColor}
-            isDark={isDark}
-            setSelected={setSelected}
-          />
-        </Html>
-        <Html
-          divProps={{
-            style: {
-              left: "90%",
-              marginTop: "15px",
-            },
-          }}
-        >
-          <ToggleSwitch
-            color={color}
-            setColor={setColor}
-            isDark={isDark}
-            setIsDark={setIsDark}
-          />
-        </Html>
+        <Toolbar
+          tool={tool}
+          setTool={setTool}
+          color={color}
+          setColor={setColor}
+          isDark={isDark}
+          setSelected={setSelected}
+        />
+        <ToggleSwitch
+          color={color}
+          setColor={setColor}
+          isDark={isDark}
+          setIsDark={setIsDark}
+        />
         <Rect
           x={0}
           y={0}

@@ -17,6 +17,7 @@ export const ToolbarDiv = styled.div<{ $isDark?: boolean }>`
 `;
 
 export const Button = styled.button<{ $set?: boolean; $isDark?: boolean }>`
+  cursor: pointer;
   background-color: ${(props) =>
     props.$isDark
       ? props.$set
@@ -46,6 +47,7 @@ export const ColorButton = styled.button<{
   $isDark?: boolean;
   $color?: string;
 }>`
+  cursor: pointer;
   background-color: ${(props) => props.$color || COLORS.BLACK};
   background-clip: content-box, padding-box;
   border-color: ${COLORS.WHITE};
