@@ -1,19 +1,22 @@
 # no-idea
 
 ### TODO (sorted easy -> diff):
-- Make Diamonds actual diamonds, not just rotated Rects
-- Infinite (or just bigger) canvas that you can move around in
+- [ ] Make Diamonds actual diamonds, not just rotated Rects
+- [ ] Infinite (or just bigger) canvas that you can move around in
     - Am I the only one that sees the stupid 1px white line on Firefox?
-- Undo/Redo with Ctrl/Cmd-Z (use a history?)
-- Firefox: Fix the damn font/sizing change when text goes from editable to static Konva
+- [ ] Undo/Redo with Ctrl/Cmd-Z (use a history?)
+- [x] Fix the damn font/sizing change when text goes from editable to static Konva
     - There's a fix for the Y-axis change here https://konvajs.org/docs/sandbox/Editable_Text.html
     - But there appears to be a font size change as well somehow
     - ...ffs. I figured it out.... I'm using "Bold". But "Bold" does not exist on this weird custom font. So the browser decides how to "bold" it and I'm assuming Konva does too in its own weird way and they're not aligned.. Ugh
-- Selection box (to select multiple shapes, in order to possibly delete)
-- Saving
-    - As Image
-    - As Loadable State
-- Collaboration
+    - So I fixed it. It's hella ugly, but whtvr
+- [ ] When resizing text that has multiple words, sometimes the last word disappears when transforming into Static Konva Text
+    - These freaking issues with width differences are killing me. Could be the spaces maybe
+- [ ] Selection box (to select multiple shapes, in order to possibly delete)
+- [ ] Saving
+    - [ ] As Image
+    - [ ] As Loadable State
+- [ ] Collaboration
 
 
 ### A New Beginning

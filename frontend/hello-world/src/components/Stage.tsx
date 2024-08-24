@@ -73,7 +73,7 @@ export default function StageComponent() {
           x: pos.x,
           y: pos.y,
           text: " ",
-          fontSize: 16,
+          fontSize: 14,
           typing: true,
           color,
           width: 100,

@@ -17,3 +17,8 @@ code {
   font-family: 'Indie Flower';
   src: local('Indie Flower'), url(./fonts/IndieFlower-Regular.ttf) format('truetype');
 }
+
+@font-face {
+  font-family: 'Virgil';
+  src: local('Virgil'), url(./fonts/Virgil.woff2) format('woff2');
+}

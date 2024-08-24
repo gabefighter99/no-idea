@@ -30,9 +30,8 @@ const StaticKonvaText = ({
       height={text.height}
       width={text.width}
       fill={text.color}
-      fontFamily={"Indie Flower"}
+      fontFamily={"Virgil"}
       fontSize={text.fontSize}
-      fontStyle={"bold"}
       onClick={handleSelect}
       onMouseOver={() => handleMouseOver("move")}
       onMouseOut={handleMouseOut}
@@ -43,7 +42,7 @@ const StaticKonvaText = ({
         const newY = textNode.y();
         const newWidth = textNode.width() * textNode.scaleX();
         const newHeight = textNode.height() * textNode.scaleY();
-        const newFontSize = textNode.fontSize() * textNode.scaleX();
+        const newFontSize = Math.round(textNode.fontSize() * textNode.scaleX());
         textNode.setAttrs({
           scaleX: 1,
           scaleY: 1,

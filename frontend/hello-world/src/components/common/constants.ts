@@ -1,3 +1,6 @@
+export const isFirefox =
+  navigator.userAgent.toLowerCase().indexOf("firefox") > -1;
+
 export const TOOLS = {
   HAND: "HAND",
   SCRIBBLE: "SCRIBBLE",

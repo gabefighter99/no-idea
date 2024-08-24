@@ -17,4 +17,30 @@ const applyToShapes = (
   setTexts((prev) => fn(prev) as TextType[]);
 };
 
-export { applyToShapes };
+// The following function attempts to align along the Y axis
+// Virgil font text in a Div to Virgil font in the Konva Text Component
+function getOffsetY(fontSize: number, isFirefox: boolean): number {
+  if (fontSize < 9 || fontSize > 66) {
+    // Font Size should be between 9 and 66
+    console.log("Bad Font Size ", fontSize);
+  }
+
+  const firefoxThresholds = [21, 26, 39, 43, 56];
+  const firefoxOffsets = [-1, -1.5, -2, -2.5, -3, -3.5];
+
+  const otherThresholds = [9, 14, 26, 36, 44, 53, 64];
+  const otherOffsets = [-0, -0.5, -1, -1.5, -2, -2.5, -3, -3.5];
+
+  const thresholds = isFirefox ? firefoxThresholds : otherThresholds;
+  const offsets = isFirefox ? firefoxOffsets : otherOffsets;
+
+  for (let i = 0; i < thresholds.length; i++) {
+    if (fontSize <= thresholds[i]) {
+      return offsets[i];
+    }
+  }
+
+  return offsets[offsets.length - 1];
+}
+
+export { applyToShapes, getOffsetY };

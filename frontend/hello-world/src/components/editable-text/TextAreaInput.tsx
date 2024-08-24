@@ -1,8 +1,9 @@
 import { useEffect, useRef } from "react";
 import { Html } from "react-konva-utils";
-import { ACTION, TextType, TOOLS } from "../common/constants";
+import { ACTION, isFirefox, TextType, TOOLS } from "../common/constants";
 import { handleMouseOut, handleMouseOver } from "../common/eventHandlers";
 import { EditableDiv } from "../common/styled";
+import { getOffsetY } from "../common/utils";
 
 type TextAreaInputProps = {
   text: TextType;
@@ -69,7 +70,7 @@ const TextAreaInput = ({
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
     if (context) {
-      context.font = `bold ${text.fontSize}px Indie Flower`;
+      context.font = `${text.fontSize}px Virgil`;
 
       const lines = textRef.current.innerText.split("\n");
       let maxWidth = 0;
@@ -82,7 +83,7 @@ const TextAreaInput = ({
       });
 
       const newHeight = textRef.current.offsetHeight;
-      const newWidth = maxWidth + 1;
+      const newWidth = maxWidth + 1.5;
 
       setTexts((prevTexts) => {
         let idx = prevTexts.findIndex((cand) => cand.id === text.id);
@@ -109,6 +110,7 @@ const TextAreaInput = ({
     >
       <EditableDiv
         $fontSize={text.fontSize}
+        $offsetY={getOffsetY(text.fontSize, isFirefox)}
         contentEditable
         ref={textRef}
         id={text.id}
