@@ -1,5 +1,7 @@
 # no-idea
 
+### Play Around (Beta): <a href="https://verdant-scone-642f7d.netlify.app/" target="_blank">no-idea</a>
+
 ### TODO (sorted easy -> diff):
 - [ ] Make Diamonds actual diamonds, not just rotated Rects
 - [ ] Infinite (or just bigger) canvas that you can move around in
