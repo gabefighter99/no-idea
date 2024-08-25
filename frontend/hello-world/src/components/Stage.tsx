@@ -83,9 +83,9 @@ export default function StageComponent() {
     }
   };
 
-  const handleSave = () => {
-    const uri = stageRef?.current?.toBlob;
-  };
+  // const handleSave = () => {
+  //   const uri = stageRef?.current?.toBlob;
+  // };
 
   useEffect(() => {
     trRef.current?.nodes([]);
@@ -126,7 +126,7 @@ export default function StageComponent() {
           }),
       );
     }
-  }, [isDark]);
+  }, [isDark, setRects, setCircles, setLines, setScribbles, setTexts]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -155,7 +155,7 @@ export default function StageComponent() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [selected]);
+  }, [selected, setRects, setCircles, setLines, setScribbles, setTexts]);
 
   return (
     <Stage

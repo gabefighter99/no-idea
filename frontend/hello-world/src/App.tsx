@@ -4,7 +4,7 @@ import "./App.css";
 import StageComponent from "./components/Stage";
 
 function App() {
-  const [hello, setHello] = useState("");
+  const [, setHello] = useState("");
   useEffect(() => {
     axios
       .get("http://localhost:8080/helloworld")
