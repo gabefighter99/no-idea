@@ -33,6 +33,9 @@ const ToggleSwitch = ({
         style: {
           left: "90%",
           marginTop: "15px",
+          // HTML div has some weirdness where it autoassigns odd transforms, making div position relative
+          // So we do this:
+          transform: "translateY(0%)",
         },
       }}
     >

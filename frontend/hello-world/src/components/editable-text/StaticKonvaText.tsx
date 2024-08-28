@@ -33,6 +33,7 @@ const StaticKonvaText = ({
       fontFamily={"Virgil"}
       fontSize={text.fontSize}
       onClick={handleSelect}
+      hitStrokeWidth={5}
       onMouseOver={() => handleMouseOver("move")}
       onMouseOut={handleMouseOut}
       onTransformEnd={() => {
@@ -63,6 +64,7 @@ const StaticKonvaText = ({
       draggable={isDraggable}
       onDragStart={handleSelect}
       onDragEnd={(e: Konva.KonvaEventObject<DragEvent>) => {
+        e.cancelBubble = true;
         const { x, y } = e.target.attrs;
         setTexts((prevs) => {
           const idx = prevs.findIndex((cand) => cand.id === text.id);

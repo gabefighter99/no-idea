@@ -6,21 +6,22 @@ import Toolbar from "./menus/Toolbar";
 import EditableText from "./editable-text/EditableText";
 import LineArrow from "./shapes/LineArrow";
 import { handleMouseOut, handleMouseOver } from "./common/eventHandlers";
-import useDrawingTool from "../hooks/useDrawingTool";
+import useDrawingTool from "./hooks/useDrawingTool";
 import ToggleSwitch from "./menus/ToggleSwitch";
-import { applyToShapes } from "./common/utils";
+import { applyToShapes, trueCursorPos } from "./common/utils";
 
 export default function StageComponent() {
   const stageRef = useRef<Konva.Stage>(null);
   const trRef = useRef<Konva.Transformer>(null);
+  const bgRef = useRef<Konva.Rect>(null);
 
-  const [tool, setTool] = useState(TOOLS.HAND);
+  const [tool, setTool] = useState(TOOLS.POINTER);
   const [isDark, setIsDark] = useState(false);
   const [color, setColor] = useState(COLORS.BLACK);
   const [selected, setSelected] = useState<Konva.Node | null>(null);
 
   const action = useRef(ACTION.NONE);
-  const isDraggable = tool === TOOLS.HAND;
+  const isDraggable = tool === TOOLS.POINTER;
 
   const [texts, setTexts] = useState<TextType[]>([]);
   const [clickCooldown, setClickCooldown] = useState(false);
@@ -32,18 +33,29 @@ export default function StageComponent() {
     handlePtrDown,
     handlePtrMove,
     handlePtrUp,
+    handleWheel,
+    handleLayerDrag,
     setRects,
     setCircles,
     setLines,
     setScribbles,
-  } = useDrawingTool(stageRef, action, color, tool, setTool, setClickCooldown);
+  } = useDrawingTool(
+    stageRef,
+    bgRef,
+    action,
+    color,
+    tool,
+    setTool,
+    setClickCooldown,
+  );
 
   const handleSelect = (e: Konva.KonvaEventObject<MouseEvent>) => {
-    if (tool !== TOOLS.HAND) return;
+    if (tool !== TOOLS.POINTER) return;
     setSelected(e.currentTarget);
   };
 
   const handleDblTapClick = () => {
+    if (tool === TOOLS.HAND) return;
     if (clickCooldown) return;
     if (!stageRef.current) return;
 
@@ -66,12 +78,15 @@ export default function StageComponent() {
     } else {
       const id = Date.now().toString();
 
+      const cur = trueCursorPos(stage);
+      if (!cur) return;
+
       setTexts((prevTexts) => [
         ...prevTexts,
         {
           id,
-          x: pos.x,
-          y: pos.y,
+          x: cur.x,
+          y: cur.y,
           text: " ",
           fontSize: 14,
           typing: true,
@@ -167,6 +182,15 @@ export default function StageComponent() {
       onDblTap={handleDblTapClick}
       onPointerUp={handlePtrUp}
       onPointerMove={handlePtrMove}
+      onWheel={handleWheel}
+      draggable={tool === TOOLS.HAND}
+      onDragStart={() => {
+        document.body.style.cursor = "grabbing";
+      }}
+      onDragMove={handleLayerDrag}
+      onDragEnd={() => {
+        document.body.style.cursor = "grab";
+      }}
     >
       <Layer>
         <Toolbar
@@ -184,6 +208,7 @@ export default function StageComponent() {
           setIsDark={setIsDark}
         />
         <Rect
+          ref={bgRef}
           x={0}
           y={0}
           width={window.innerWidth}
