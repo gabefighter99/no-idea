@@ -8,6 +8,7 @@ import {
 import { BsDiamond } from "react-icons/bs";
 import { IoRemoveOutline, IoSquareOutline } from "react-icons/io5";
 import { HiArrowLongRight } from "react-icons/hi2";
+import { LiaMousePointerSolid } from "react-icons/lia";
 import Konva from "konva";
 import { COLORS, TOOLS } from "../common/constants";
 import { Button, ColorButton, ToolbarDiv } from "../common/styled";
@@ -34,6 +35,10 @@ const Toolbar = ({
   const handleSelectTool = (selectedTool: string) => {
     // Deselect transformer
     setSelected(null);
+
+    if (selectedTool === TOOLS.HAND) document.body.style.cursor = "grab";
+    else document.body.style.cursor = "default";
+
     setTool(selectedTool);
   };
 
@@ -65,6 +70,16 @@ const Toolbar = ({
           onClick={() => handleSelectTool(TOOLS.HAND)}
         >
           <PiHandLight
+            color={isDark ? COLORS.WHITE : COLORS.BLACK}
+            size={iconSize}
+          />
+        </Button>
+        <Button
+          $isDark={isDark}
+          $set={tool === TOOLS.POINTER}
+          onClick={() => handleSelectTool(TOOLS.POINTER)}
+        >
+          <LiaMousePointerSolid
             color={isDark ? COLORS.WHITE : COLORS.BLACK}
             size={iconSize}
           />

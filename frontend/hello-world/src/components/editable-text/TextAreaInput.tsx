@@ -97,7 +97,7 @@ const TextAreaInput = ({
         return prevTexts.concat();
       });
       action.current = ACTION.NONE;
-      setTool(TOOLS.HAND);
+      setTool(TOOLS.POINTER);
     }
   };
 

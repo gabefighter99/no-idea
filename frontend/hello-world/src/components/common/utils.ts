@@ -1,3 +1,4 @@
+import Konva from "konva";
 import { CircleType, LineType, RectType, TextType } from "./constants";
 
 type Shape = RectType | CircleType | LineType | TextType;
@@ -43,4 +44,13 @@ function getOffsetY(fontSize: number, isFirefox: boolean): number {
   return offsets[offsets.length - 1];
 }
 
-export { applyToShapes, getOffsetY };
+const trueCursorPos = (stage: Konva.Stage) => {
+  const pos = stage.getPointerPosition();
+  if (!pos) return null;
+  return {
+    x: (pos.x - stage.x()) / stage.scaleX(),
+    y: (pos.y - stage.y()) / stage.scaleY(),
+  };
+};
+
+export { applyToShapes, getOffsetY, trueCursorPos };
