@@ -3,6 +3,7 @@ export const isFirefox =
 
 export const TOOLS = {
   HAND: "HAND",
+  POINTER: "POINTER",
   SCRIBBLE: "SCRIBBLE",
   LINE: "LINE",
   ARROW: "ARROW",

@@ -1,18 +1,40 @@
 # no-idea
 
-### TODO (sorted easy -> diff):
+### Play Around (Beta): <a href="https://verdant-scone-642f7d.netlify.app/" target="_blank">no-idea</a>
+
+### TODO (sorted easy -> diff. tho tbh most lean hi diff):
+- [ ] Tests. I think we hit the complexity level to warrant them lmao
+    - [ ] test toolbar and dark mode effects
+    - [ ] test drag all shapes + on drag end resetting to pointer
+    - [ ] test resize all shapes (+ font size changes to Text post transform)
+    - [ ] test above two after dragging and resizing canvas
+    - [ ] test background rectangle scales appropriately to fill full screen
+    - [ ] test appropriate cursor style changes
+    - [ ] if possible test text onBlur causes no "shift" for both Chrome and Firefox
+- [ ] Add quick select toolbar tool by pressing buttons (1 for hand, 2 for pointer, etc)
+- [ ] Add hints ("like double tap to add text", etc)
 - [ ] Make Diamonds actual diamonds, not just rotated Rects
-- [ ] Infinite (or just bigger) canvas that you can move around in
-    - Am I the only one that sees the stupid 1px white line on Firefox?
-- [ ] Undo/Redo with Ctrl/Cmd-Z (use a history?)
-- [x] Fix the damn font/sizing change when text goes from editable to static Konva
-    - There's a fix for the Y-axis change here https://konvajs.org/docs/sandbox/Editable_Text.html
-    - But there appears to be a font size change as well somehow
-    - ...ffs. I figured it out.... I'm using "Bold". But "Bold" does not exist on this weird custom font. So the browser decides how to "bold" it and I'm assuming Konva does too in its own weird way and they're not aligned.. Ugh
-    - So I fixed it. It's hella ugly, but whtvr
+- [ ] Undo/Redo with Ctrl/Cmd-Z (use a history? every action get pushed onto history stack?)
+- [ ] Make it work on Mobile
+    - Most of the functionality already works. Famous last works, but I'm hoping this is just a few more tweaks.
+- [x] Better canvas:
+    - [x] Infinite canvas
+    - [x] Draggable canvas
+    - [x] Zoomable canvas
+        - N.B. Am I the only one that sees the stupid 1px white line on Firefox? Thought it was an extension, but I see it in Incognito too
+- [x] Fix the damn font/sizing change glitch when onBlur text goes from editable to static Konva
+    - This is actually a two-parter
+    - [x] Y-axis glitch
+        - Fixed manually by testing pixel offset based on fontSize. Was exactly as painful as it sounds. Check common/utils.ts
+        - It's hella ugly, but whtvr
+    - [x] X-axis change
+        - There appears to be a font size change as well somehow
+        - ...ffs. I figured it out.... I'm using "Bold". But "Bold" does not exist on this weird custom font. So the browser decides how to "bold" it and I'm assuming Konva does too in its own weird way and they're not aligned.. Ugh
+        - Changing fonts fixes this
 - [ ] When resizing text that has multiple words, sometimes the last word disappears when transforming into Static Konva Text
-    - These freaking issues with width differences are killing me. Could be the spaces maybe
+    - These freaking issues with width differences are killing me. Could be the spaces maybe?
 - [ ] Selection box (to select multiple shapes, in order to possibly delete)
+- [ ] Connecting objects (like arrows pointing to Rects becoming a single Group)
 - [ ] Saving
     - [ ] As Image
     - [ ] As Loadable State
