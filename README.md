@@ -65,13 +65,13 @@ check fb, this is what i see
 
 ### Kinda how im imagining this going:
 
-Frontend (React, TypeScript, Socket.IO):
+Frontend (React, TypeScript):
 
 - UI
+
+Backend Server-Side (Go, Socket.IO):
+
 - Real-time collaboration
-
-Backend (Go):
-
 - Auth (login, registration, JWTs)
 - Rooms (and any logic related)
 - DBs (user data, drawings, rooms)
