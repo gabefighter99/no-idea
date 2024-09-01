@@ -1,4 +1,4 @@
-package main
+package collab
 
 import (
 	"fmt"
@@ -52,6 +52,7 @@ func helloWorldHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	http.HandleFunc("GET /ws", collabHandler)
 	http.HandleFunc("GET /helloworld", helloWorldHandler)
 	http.HandleFunc("POST /saveBoard", saveBoardHandler)
 	http.ListenAndServe(":8080", nil)
