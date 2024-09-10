@@ -1,4 +1,4 @@
-package collab
+package main
 
 import (
 	"fmt"
@@ -7,7 +7,10 @@ import (
 	ws "github.com/gorilla/websocket"
 )
 
-type Element struct{}
+type Element struct {
+	Type    string `json:"type"`
+	Message string `json:"message"`
+}
 
 type Room struct {
 	clients    map[*ws.Conn]bool
@@ -28,24 +31,34 @@ func (room *Room) run() {
 	for {
 		select {
 		case elem := <-room.broadcast:
+			fmt.Printf("Broadcasting: %s\n", elem)
 			room.history = append(room.history, elem)
 			for client := range room.clients {
 				err := client.WriteJSON(elem)
 				if err != nil {
+					fmt.Printf("Error: %s\n", err)
 					room.unregister <- client
 					continue
 				}
 			}
 		case client := <-room.register:
+			fmt.Printf("Registering: %s\n", client.LocalAddr())
+			if _, ok := room.clients[client]; ok {
+				continue
+			}
+
 			room.clients[client] = true
 			for _, msg := range room.history {
+				fmt.Printf("message %s", msg)
 				err := client.WriteJSON(msg)
 				if err != nil {
+					fmt.Printf("Error during history: %s\n", client.LocalAddr())
 					room.unregister <- client
 					return
 				}
 			}
 		case client := <-room.unregister:
+			fmt.Printf("Closing: %s\n", client.LocalAddr())
 			delete(room.clients, client)
 			client.Close()
 		}
@@ -55,8 +68,14 @@ func (room *Room) run() {
 func handleMessages(conn *ws.Conn, room *Room) {
 	for {
 		var elem Element
-		err := conn.ReadJSON(&elem)
+		// err := conn.ReadJSON(&elem)
+		typ, bytes, err := conn.ReadMessage()
+		fmt.Printf("Error handling: %d\n", typ)
+		fmt.Printf("Error handling: %s\n", bytes)
 		if err != nil {
+			fmt.Printf("Error handling: %s\n", conn.LocalAddr())
+			fmt.Printf("Error handling: %d\n", typ)
+			fmt.Printf("Error handling: %s\n", bytes)
 			room.unregister <- conn
 			return
 		}
@@ -65,6 +84,7 @@ func handleMessages(conn *ws.Conn, room *Room) {
 }
 
 func collabHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		fmt.Println(err)
@@ -72,6 +92,7 @@ func collabHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	roomId := r.URL.Query().Get("room")
+	fmt.Println("Room: " + roomId)
 	if roomId == "" {
 		conn.Close()
 		return

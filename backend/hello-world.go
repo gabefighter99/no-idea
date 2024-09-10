@@ -1,4 +1,4 @@
-package collab
+package main
 
 import (
 	"fmt"

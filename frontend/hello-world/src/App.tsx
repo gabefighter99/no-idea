@@ -4,6 +4,23 @@ import "./App.css";
 import StageComponent from "./components/Stage";
 
 function App() {
+  const ws = new WebSocket("ws://localhost:8080/ws?room=MAIN");
+  ws.onopen = () => {
+    console.log("WebSocket connection opened");
+
+    ws.onmessage = (e) => {
+      console.log("Message received: ", e.data);
+      const msg = { type: "response", message: e.data };
+      ws.send(JSON.stringify(msg));
+    };
+    ws.onclose = () => {
+      console.log("WebSocket connection closed");
+    };
+    ws.onerror = (error) => {
+      console.log("WebSocket error", error);
+    };
+  };
+
   const [, setHello] = useState("");
   useEffect(() => {
     axios
@@ -17,6 +34,11 @@ function App() {
   }, []);
   return (
     <div className="App">
+      <button
+        onClick={() => {
+          ws.send("hello");
+        }}
+      />
       <StageComponent />
     </div>
   );
